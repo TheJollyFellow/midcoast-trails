@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Midcoast Maine Trail Guide — Get Outside!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Ramabhadra&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --brand-green: #3d6e38;
+    --brand-green-dark: #2c5228;
+    --brand-green-light: #5a9c4e;
+    --brand-green-pale: #e4f0df;
+    --brand-orange: #b35b27;
+    --brand-orange-light: #c37328;
+    --brand-orange-warm: #f89406;
+    --brand-orange-pale: #fdf3e7;
+    --cream: #faf8f3;
+    --tan: #f5efe4;
+    --white: #ffffff;
+    --bark: #5c3d1e;
+    --bark-light: #8b6b45;
+    --gray-200: #e5e0d8;
+    --gray-400: #a09888;
+    --gray-600: #6b6358;
+    --gray-800: #3a352e;
+    --shadow-sm: 0 1px 4px rgba(60,40,15,0.08);
+    --shadow: 0 3px 14px rgba(60,40,15,0.10);
+    --shadow-lg: 0 8px 30px rgba(60,40,15,0.15);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cream);
+    color: var(--gray-800);
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: var(--brand-green);
+    color: white;
+    padding: 0 16px;
+    height: 56px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 3px 12px rgba(44,82,40,0.3);
+  }
+  .header-logo {
+    width: 36px; height: 36px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .header h1 {
+    font-family: 'Ramabhadra', sans-serif;
+    font-size: 18px; font-weight: 400; letter-spacing: 0.5px;
+    line-height: 1.1;
+  }
+  .header .subtitle {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10px; opacity: 0.8; font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  /* ===== INTRO BANNER ===== */
+  .intro-banner {
+    position: fixed; top: 56px; left: 0; right: 0;
+    z-index: 1001;
+    background: linear-gradient(135deg, var(--brand-green-pale), #d4e8cf);
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(61,110,56,0.15);
+    transition: all 0.3s ease;
+    max-height: 200px;
+    overflow: hidden;
+  }
+  .intro-banner.hidden {
+    max-height: 0; padding: 0 16px;
+    border-bottom: none;
+  }
+  .intro-banner-inner {
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .intro-banner .intro-icon {
+    font-size: 28px; flex-shrink: 0; line-height: 1;
+  }
+  .intro-banner .intro-text {
+    flex: 1;
+  }
+  .intro-banner .intro-text h3 {
+    font-family: 'Ramabhadra', sans-serif;
+    font-size: 14px; font-weight: 400; color: var(--brand-green-dark);
+    margin-bottom: 4px;
+  }
+  .intro-banner .intro-text p {
+    font-size: 12px; line-height: 1.5; color: var(--gray-600);
+  }
+  .intro-dismiss {
+    background: none; border: none; color: var(--gray-400);
+    font-size: 18px; cursor: pointer; padding: 4px;
+    line-height: 1; flex-shrink: 0;
+  }
+
+  /* ===== VIEW TOGGLE ===== */
+  .view-toggle {
+    position: fixed; left: 0; right: 0;
+    z-index: 999;
+    display: flex; background: var(--white);
+    border-bottom: 2px solid var(--brand-green-pale);
+  }
+  .view-toggle button {
+    flex: 1; padding: 11px; border: none; background: none;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px; font-weight: 700; color: var(--gray-400);
+    cursor: pointer; transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .view-toggle button svg { width: 16px; height: 16px; }
+  .view-toggle button.active {
+    color: var(--brand-green);
+    border-bottom-color: var(--brand-orange);
+  }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    position: fixed; left: 0; right: 0;
+    z-index: 998;
+    background: var(--white);
+    padding: 8px 12px;
+    display: flex; gap: 8px; align-items: center;
+    border-bottom: 1px solid var(--gray-200);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+
+  .town-select {
+    flex-shrink: 0;
+    padding: 7px 28px 7px 10px;
+    border-radius: 20px;
+    border: 1.5px solid var(--brand-green);
+    background: var(--brand-green-pale);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--brand-green-dark);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%232c5228'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    outline: none;
+  }
+
+  .filter-divider {
+    width: 1px; height: 24px; background: var(--gray-200); flex-shrink: 0;
+  }
+
+  .filter-chip {
+    flex-shrink: 0;
+    padding: 7px 15px;
+    border-radius: 20px;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .filter-chip:active { transform: scale(0.95); }
+  .filter-chip.active {
+    background: var(--brand-green);
+    color: white;
+    border-color: var(--brand-green);
+    box-shadow: 0 2px 8px rgba(61,110,56,0.3);
+  }
+
+  /* ===== MAP ===== */
+  #map {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    top: 180px; /* default; JS updateLayout() overrides with exact value */
+    z-index: 1;
+  }
+  #map.hidden { display: none; }
+
+  /* ===== LIST VIEW ===== */
+  .list-view {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    top: 226px; /* default; JS updateLayout() overrides with exact value */
+    overflow-y: auto; padding: 8px 12px 80px;
+    background: var(--cream);
+    -webkit-overflow-scrolling: touch;
+  }
+  .list-view.hidden { display: none; }
+
+  .list-header {
+    text-align: center;
+    padding: 8px 0 12px;
+    font-size: 12px; font-weight: 600;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ===== TRAIL CARDS ===== */
+  .trail-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border-left: 4px solid var(--brand-green);
+  }
+  .trail-card:active { transform: scale(0.98); box-shadow: var(--shadow-sm); }
+  .trail-card.closed { border-left-color: var(--gray-400); opacity: 0.7; }
+
+  .card-photo {
+    width: 100%; height: 90px;
+    object-fit: cover;
+    display: block;
+  }
+  .card-photo-placeholder {
+    width: 100%; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--brand-green-pale), #c8dcc4);
+  }
+  .card-photo-placeholder svg { width: 36px; height: 36px; opacity: 0.3; fill: var(--brand-green); }
+
+  .card-top {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 14px 0;
+  }
+  /* Search box */
+  .search-box {
+    position: fixed; left: 0; right: 0;
+    z-index: 997;
+    padding: 8px 12px;
+    background: var(--cream);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .search-box.hidden { display: none; }
+  .search-input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    background: var(--white);
+    color: var(--gray-800);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--brand-green); }
+  .search-input::placeholder { color: var(--gray-400); }
+  .search-icon {
+    position: absolute;
+    left: 24px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    pointer-events: none;
+  }
+
+  .card-title-area { flex: 1; min-width: 0; }
+  .card-title-area h3 {
+    font-family: 'Ramabhadra', sans-serif;
+    font-size: 17px; font-weight: 400; color: var(--gray-800);
+    line-height: 1.2;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-subtitle {
+    font-size: 12px; color: var(--gray-400); margin-top: 2px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+
+  .card-body { padding: 8px 14px 10px; }
+
+  /* Weather strip on cards */
+  .card-weather {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #f0f7ee, #e8f0e5);
+    font-size: 11px; color: var(--gray-600);
+    border-top: 1px solid var(--gray-200);
+  }
+  .card-weather .cw-emoji { font-size: 16px; flex-shrink: 0; }
+  .card-weather .cw-text { flex: 1; line-height: 1.4; }
+  .card-weather .cw-temp { font-weight: 700; color: var(--brand-green); font-family: 'Ramabhadra', sans-serif; }
+  .card-weather .cw-quip { font-style: italic; opacity: 0.85; }
+
+  .card-stats {
+    display: flex; gap: 0; margin-bottom: 10px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .card-stat {
+    flex: 1; padding: 8px 6px;
+    text-align: center;
+    border-right: 1px solid var(--gray-200);
+  }
+  .card-stat:last-child { border-right: none; }
+  .card-stat .val {
+    font-size: 15px; font-weight: 700; color: var(--brand-green);
+    font-family: 'Ramabhadra', sans-serif;
+  }
+  .card-stat .lbl { font-size: 10px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .card-tags {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .trail-tag {
+    padding: 4px 10px;
+    background: var(--brand-green-pale);
+    color: var(--brand-green-dark);
+    border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+  }
+  .trail-tag.dog-yes { background: #eef6ee; color: #2d7a2d; }
+  .trail-tag.dog-no { background: #fef2f2; color: #b91c1c; }
+  .trail-tag.water { background: #e8f4fd; color: #1565c0; }
+  .trail-tag.bike { background: #fff3e0; color: #e65100; }
+  .trail-tag.beach { background: #fff8e1; color: #f57f17; }
+  .trail-tag.island { background: #e0f2f1; color: #00695c; }
+
+  /* ===== STATUS BADGE ===== */
+  .status-closed {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px;
+    background: #fef2f2; color: #b91c1c;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  /* ===== DETAIL PANEL ===== */
+  .detail-panel {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2000;
+    background: var(--cream);
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .detail-panel.open { transform: translateY(0); }
+
+  .detail-hero {
+    position: relative;
+    background: var(--brand-green);
+    background-size: cover;
+    background-position: center;
+    padding: 16px 16px 24px;
+    color: white;
+    overflow: hidden;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .detail-hero.has-photo { min-height: 200px; }
+  .detail-hero.has-photo::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.05) 100%);
+    z-index: 1;
+  }
+  .detail-hero > * { position: relative; z-index: 2; }
+  .detail-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 20px;
+    background: var(--cream);
+    border-radius: 20px 20px 0 0;
+  }
+  .detail-hero .trees {
+    position: absolute;
+    right: -10px; bottom: 18px;
+    opacity: 0.1;
+    font-size: 80px;
+    line-height: 1;
+  }
+
+  .detail-back {
+    background: rgba(255,255,255,0.15);
+    border: none; color: white;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+    margin-bottom: 12px;
+  }
+  .detail-hero h2 {
+    font-family: 'Ramabhadra', sans-serif;
+    font-size: 26px; font-weight: 400;
+    line-height: 1.2;
+    position: relative;
+  }
+  .detail-hero .hero-meta {
+    display: flex; gap: 12px; margin-top: 8px;
+    font-size: 13px; opacity: 0.85;
+    position: relative;
+    flex-wrap: wrap;
+  }
+  .detail-hero .hero-meta span {
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  .detail-content { padding: 8px 16px 100px; }
+
+  /* Detail weather */
+  .detail-weather {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--brand-green);
+  }
+  .detail-weather-header {
+    font-family: 'Ramabhadra', sans-serif;
+    font-size: 14px; color: var(--bark);
+    margin-bottom: 10px;
+  }
+  .dw-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0;
+  }
+  .dw-row + .dw-row { border-top: 1px solid var(--gray-200); }
+  .dw-emoji { font-size: 22px; flex-shrink: 0; }
+  .dw-info { flex: 1; }
+  .dw-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-400); font-weight: 700; }
+  .dw-temp { font-family: 'Ramabhadra', sans-serif; font-size: 18px; color: var(--brand-green); }
+  .dw-desc { font-size: 12px; color: var(--gray-600); }
+  .dw-quip { font-size: 12px; font-style: italic; color: var(--brand-green-dark); margin-top: 8px; padding: 8px 10px; background: var(--brand-green-pale); border-radius: var(--radius-sm); }
+
+  .detail-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .stat-box {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 14px 10px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border-top: 3px solid var(--brand-green);
+  }
+  .stat-box .label {
+    font-size: 10px; color: var(--gray-400);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    font-weight: 700;
+  }
+  .stat-box .value {
+    font-family: 'Ramabhadra', sans-serif;
+    font-size: 24px; color: var(--brand-green);
+    margin-top: 4px;
+  }
+  .stat-box .unit { font-size: 11px; color: var(--gray-600); }
+
+  .detail-section {
+    margin-bottom: 22px;
+  }
+  .detail-section h4 {
+    font-family: 'Ramabhadra', sans-serif;
+    font-size: 15px; color: var(--bark);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .detail-section h4 .icon { font-size: 18px; }
+  .detail-section p {
+    font-size: 14px; line-height: 1.7; color: var(--gray-600);
+  }
+
+  .detail-map {
+    width: 100%; height: 200px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  /* Support disclosure */
+  .support-disclosure {
+    background: var(--brand-green-pale);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-top: 20px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--gray-600);
+    border-left: 4px solid var(--brand-green-light);
+  }
+
+  .detail-actions {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 16px;
+  }
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 15px 20px;
+    border-radius: var(--radius);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px; font-weight: 700;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .btn-directions {
+    background: var(--brand-orange); color: white;
+    box-shadow: 0 3px 12px rgba(179,91,39,0.3);
+  }
+  .btn-map-pdf {
+    background: var(--brand-green); color: white;
+    box-shadow: 0 3px 12px rgba(61,110,56,0.25);
+  }
+  .btn-website {
+    background: var(--white);
+    color: var(--brand-green);
+    border: 2px solid var(--brand-green-pale);
+  }
+
+  /* ===== LEAFLET CUSTOM MARKERS ===== */
+  .trail-pin {
+    display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    background: var(--brand-green);
+    border: 3px solid var(--white);
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: transform 0.15s;
+  }
+  .trail-pin svg { width: 14px; height: 14px; fill: white; }
+  .trail-pin:hover { transform: scale(1.15); }
+  .trail-pin.active {
+    background: var(--brand-orange);
+    transform: scale(1.2);
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow-lg) !important;
+    border: none !important;
+  }
+  .leaflet-popup-content {
+    margin: 14px 16px !important;
+    font-family: 'Open Sans', sans-serif !important;
+    line-height: 1.5 !important;
+  }
+  .leaflet-popup-tip { box-shadow: none !important; }
+  .popup-title {
+    font-family: 'Ramabhadra', sans-serif;
+    font-size: 16px; margin-bottom: 4px; color: var(--gray-800);
+  }
+  .popup-meta { font-size: 12px; color: var(--gray-400); margin-bottom: 10px; }
+  .popup-btn {
+    display: inline-block; padding: 8px 16px;
+    background: var(--brand-orange); color: white;
+    border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 700;
+    text-decoration: none; cursor: pointer; border: none;
+    font-family: 'Open Sans', sans-serif;
+    transition: transform 0.1s;
+  }
+  .popup-btn:active { transform: scale(0.95); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (min-width: 768px) {
+    .list-view { padding: 16px; }
+    .trail-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .trail-card { margin-bottom: 0; }
+  }
+  @media (min-width: 1024px) {
+    .trail-cards-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 40 40" width="36" height="36">
+      <g fill="white">
+        <rect x="17" y="26" width="6" height="10" rx="1" opacity="0.9"/>
+        <ellipse cx="20" cy="18" rx="14" ry="14" opacity="0.15"/>
+        <ellipse cx="20" cy="16" rx="11" ry="12" opacity="0.3"/>
+        <path d="M20 3 C10 8, 6 16, 10 24 C13 28, 17 28, 20 28 C23 28, 27 28, 30 24 C34 16, 30 8, 20 3Z" opacity="0.9"/>
+        <path d="M20 8 L20 26" stroke="rgba(255,255,255,0.3)" stroke-width="1" fill="none"/>
+        <path d="M14 16 L20 13 L26 16" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" fill="none"/>
+        <path d="M12 21 L20 17 L28 21" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" fill="none"/>
+      </g>
+    </svg>
+  </div>
+  <div>
+    <h1>Midcoast Trail Guide</h1>
+    <div class="subtitle">Explore Midcoast Maine's Public Lands</div>
+  </div>
+</div>
+
+<!-- INTRO BANNER -->
+<div class="intro-banner" id="intro-banner">
+  <div class="intro-banner-inner">
+    <span class="intro-icon">&#127794;</span>
+    <div class="intro-text">
+      <h3>Welcome to the Midcoast Trail Guide</h3>
+      <p>Discover parks, preserves, and trails across Midcoast Maine &mdash; from wooded inland paths to rocky coastal shores and offshore islands. Filter by town or activity to find your next adventure. Managed by local land trusts, conservation groups, and public agencies.</p>
+    </div>
+    <button class="intro-dismiss" onclick="dismissIntro()" aria-label="Dismiss">&times;</button>
+  </div>
+</div>
+
+<!-- VIEW TOGGLE -->
+<div class="view-toggle" id="view-toggle">
+  <button id="btn-map" class="active" onclick="showView('map')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+    Map
+  </button>
+  <button id="btn-list" onclick="showView('list')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    Trails
+  </button>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filter-bar">
+  <select class="town-select" id="town-select" onchange="applyFilters()">
+    <option value="all">All Towns</option>
+  </select>
+  <div class="filter-divider"></div>
+  <button class="filter-chip active" data-filter="all" onclick="setActivityFilter('all', this)">All</button>
+  <button class="filter-chip" data-filter="dogs" onclick="setActivityFilter('dogs', this)">&#128054; Dog Friendly</button>
+  <button class="filter-chip" data-filter="long" onclick="setActivityFilter('long', this)">&#128694; 1+ Miles</button>
+  <button class="filter-chip" data-filter="beach" onclick="setActivityFilter('beach', this)">&#127958; Beach</button>
+  <button class="filter-chip" data-filter="island" onclick="setActivityFilter('island', this)">&#127965; Island</button>
+  <button class="filter-chip" data-filter="water" onclick="setActivityFilter('water', this)">&#128758; Water Access</button>
+  <button class="filter-chip" data-filter="biking" onclick="setActivityFilter('biking', this)">&#128692; Biking</button>
+  <button class="filter-chip" data-filter="views" onclick="setActivityFilter('views', this)">&#127748; Scenic Views</button>
+</div>
+
+<!-- MAP VIEW -->
+<div id="map"></div>
+
+<!-- SEARCH BOX (list view only) -->
+<div class="search-box hidden" id="search-box">
+  <div style="position:relative">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" class="search-input" id="search-input" placeholder="Search trails by name or town..." oninput="applySearch()">
+  </div>
+</div>
+
+<!-- LIST VIEW -->
+<div class="list-view hidden" id="list-view"></div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-panel" id="detail-panel"></div>
+
+<script>
+// ===== ACTIVITY EMOJI MAP =====
+const activityEmoji = {
+  'Walking': '\u{1F6B6}', 'Hiking': '\u{1F97E}', 'Birding': '\u{1F426}', 'Snowshoeing': '\u{2744}',
+  'Cross-country Skiing': '\u{26F7}', 'Mountain Biking': '\u{1F6B5}', 'Biking': '\u{1F6B4}',
+  'Swimming': '\u{1F3CA}', 'Fishing': '\u{1F3A3}', 'Water Access': '\u{1F6F6}',
+  'Kayak Launch': '\u{1F6F6}', 'ATV': '\u{1F697}', 'Snowmobiling': '\u{2744}',
+  'Hunting': '\u{1F332}', 'Playground': '\u{1F3A0}', 'Picnicking': '\u{1F9FA}',
+  'Scenic Views': '\u{1F304}', 'Beach': '\u{1F3D6}', 'Camping': '\u{26FA}',
+  'Historic Site': '\u{1F3F0}', 'Island Access': '\u{26F5}'
+};
+
+const treeSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 14h4l-3 8h14l-3-8h4L12 2z"/></svg>`;
+
+function handleImgError(img) {
+  const div = document.createElement('div');
+  div.className = 'card-photo-placeholder';
+  div.innerHTML = treeSvg;
+  img.replaceWith(div);
+}
+
+// ===== ORG LOOKUP (for detail page only) =====
+const orgInfo = {
+  btlt: { name: 'Brunswick-Topsham Land Trust', website: 'https://www.btlt.org/trailmap/' },
+  hhlt: { name: 'Harpswell Heritage Land Trust', website: 'https://hhltmaine.org/get-outdoors/' },
+  kelt: { name: 'Kennebec Estuary Land Trust', website: 'https://www.kennebecestuary.org/trails/' },
+  plt: { name: 'Phippsburg Land Trust', website: 'https://phippsburglandtrust.org/' },
+  tnc: { name: 'The Nature Conservancy', website: 'https://www.nature.org/en-us/get-involved/how-to-help/places-we-protect/me-basin-preserve/' },
+  audubon: { name: 'Maine Audubon', website: 'https://maineaudubon.org/' },
+  bates: { name: 'Bates College', website: 'https://www.bates.edu/bates-morse-mountain-shortridge/visiting/' },
+  mcht: { name: 'Maine Coast Heritage Trust', website: 'https://www.mcht.org/' },
+  bowdoin: { name: 'Bowdoin College', website: 'https://www.bowdoin.edu/coastal-studies-center/' },
+  state: { name: 'Maine Bureau of Parks and Lands', website: 'https://www.maine.gov/dacf/parks/' },
+  'town-brunswick': { name: 'Town of Brunswick', website: 'https://www.brunswickme.gov/191/Parks-Recreation' },
+  'town-topsham': { name: 'Town of Topsham', website: 'https://www.topshammaine.com/' },
+  'town-bath': { name: 'City of Bath', website: 'https://www.cityofbathmaine.gov/' },
+  'town-harpswell': { name: 'Town of Harpswell', website: 'https://www.harpswell.maine.gov/' }
+};
+
+// ===== TRAIL DATA =====
+const trails = [
+  // ===== BTLT TRAILS =====
+  {
+    id: 'androscoggin-woods', name: 'Androscoggin Woods', town: 'Topsham', org: 'btlt',
+    miles: 1.0, acres: 53, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: 'A wooded 53-acre property along the Androscoggin River offering peaceful walking trails with opportunities for birding and water access.',
+    highlight: 'Androscoggin River frontage',
+    status: 'Temporarily Closed',
+    statusNote: 'Closed winter 2025\u20132026 due to unsafe driveway conditions. Expected to reopen spring 2026.',
+    lat: 43.9575, lng: -69.9690, parkingLat: 43.9573, parkingLng: -69.9695,
+    photo: 'https://www.btlt.org/wp-content/uploads/2020/01/Androscoggin-Woods-3.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/04/Androscoggin-Woods-Trail-Map-Brochure-2022.pdf'
+  },
+  {
+    id: 'bradley-pond', name: 'Bradley Pond Farm Preserve', town: 'Topsham', org: 'btlt',
+    miles: 4.0, acres: 163, dogs: true,
+    activities: ['Walking', 'Cross-country Skiing', 'Mountain Biking'],
+    description: 'A 163-acre former farm with 4 miles of trails through forests, fields, and past a scenic pond. Popular for mountain biking and snowshoeing.',
+    highlight: 'Scenic pond & diverse trails',
+    lat: 43.9630, lng: -69.9350, parkingLat: 43.9653, parkingLng: -69.9317,
+    photo: 'https://www.btlt.org/wp-content/uploads/2017/03/BPF-Perimeter-Trail-John-Carpenter.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/09/BPF-Trail-Brochure-Update-2022-1.pdf'
+  },
+  {
+    id: 'cathance-river', name: 'Cathance River Nature Preserve', town: 'Topsham', org: 'btlt',
+    miles: 3.3, acres: 230, dogs: false,
+    activities: ['Walking', 'Birding', 'Snowshoeing'],
+    description: 'A 230-acre preserve featuring a dramatic river gorge, ravines, and a wide variety of ecosystems. No dogs allowed to protect sensitive habitat.',
+    highlight: 'Wild Cathance River gorge',
+    lat: 43.9584, lng: -69.9327, parkingLat: 43.9620, parkingLng: -69.9304,
+    trailheadLat: 43.9607, trailheadLng: -69.9289,
+    photo: 'https://www.btlt.org/wp-content/uploads/2016/10/cathance-river_Paul-Mirto-photographer_small.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2023/06/CRNP-Trail-Map-as-of-June-2023.pdf'
+  },
+  {
+    id: 'chase-reserve', name: 'Chase Reserve at Skolfield Shores', town: 'Brunswick', org: 'btlt',
+    miles: 1.5, acres: 47, dogs: false,
+    activities: ['Walking', 'Birding'],
+    description: 'A 47-acre coastal reserve with trails winding through upland forest to the shore of Middle Bay. Excellent birding opportunities.',
+    highlight: 'Coastal woodland to Middle Bay',
+    lat: 43.8804, lng: -69.9620, parkingLat: 43.8832, parkingLng: -69.9595,
+    photo: 'https://www.btlt.org/wp-content/uploads/2018/06/Chase-Preserve-1.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/Chase-Trails.pdf'
+  },
+  {
+    id: 'crystal-spring', name: 'Crystal Spring Farm', town: 'Brunswick', org: 'btlt',
+    miles: 2.5, acres: 155, dogs: true,
+    activities: ['Walking', 'Cross-country Skiing', 'Birding'],
+    description: 'A 155-acre working farm with trails through fields and forest. Home to a community farm with weekly farmers market in season.',
+    highlight: 'Working farm & community hub',
+    lat: 43.8896, lng: -69.9966, parkingLat: 43.8900, parkingLng: -69.9960,
+    photo: 'https://www.btlt.org/wp-content/uploads/2018/06/Crystal-Spring-Farm-spring-2.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/web_BTLT-CSF-Map-2019-2.pdf'
+  },
+  {
+    id: 'head-of-tide', name: 'Head of Tide Preserve', town: 'Brunswick', org: 'btlt',
+    miles: 2.8, acres: 85, dogs: true,
+    activities: ['Walking', 'Birding', 'Kayak Launch'],
+    description: 'An 85-acre preserve at the tidal head of the Androscoggin River featuring riverside trails, vernal pools, and a kayak launch point.',
+    highlight: 'Tidal Androscoggin & kayak launch',
+    lat: 43.9253, lng: -69.9750, parkingLat: 43.9270, parkingLng: -69.9728,
+    photo: 'https://www.btlt.org/wp-content/uploads/2018/06/Head-of-Tide-Preserve-2.jpg',
+    mapPdf: 'https://www.btlt.org/trailmap/'
+  },
+  {
+    id: 'hideaway-farm', name: 'Hideaway Farm', town: 'Brunswick', org: 'btlt',
+    miles: 1.8, acres: 75, dogs: true,
+    activities: ['Walking', 'Cross-country Skiing'],
+    description: 'A 75-acre preserve featuring a peaceful loop trail through mixed forest with views of the surrounding countryside.',
+    highlight: 'Peaceful woodland loop',
+    lat: 43.8925, lng: -69.9882, parkingLat: 43.8940, parkingLng: -69.9860,
+    photo: 'https://www.btlt.org/wp-content/uploads/2016/10/hideaway-farm.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2026/01/Hideaway-Farm-Trails-1.pdf'
+  },
+  {
+    id: 'maquoit-bay', name: 'Maquoit Bay Conservation Land', town: 'Brunswick', org: 'btlt',
+    miles: 1.6, acres: 95, dogs: true,
+    activities: ['Walking', 'Birding', 'Water Access'],
+    description: 'A 95-acre property along Maquoit Bay featuring saltwater marsh, upland forest, and stunning bay views.',
+    highlight: 'Saltwater marsh & bay views',
+    lat: 43.8750, lng: -70.0100, parkingLat: 43.8765, parkingLng: -70.0082,
+    photo: 'https://www.btlt.org/wp-content/uploads/2016/10/Maquoit-Bay.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/web_BTLT-Maquoit-Map-brochure-2019.pdf'
+  },
+  {
+    id: 'muddy-river', name: 'Muddy River Municipal Reserve', town: 'Brunswick', org: 'btlt',
+    miles: 1.0, acres: 35, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: 'A 35-acre reserve with a short loop trail along the Muddy River, great for quick walks and birding.',
+    highlight: 'Quick riverside walk',
+    lat: 43.8910, lng: -69.9735, parkingLat: 43.8922, parkingLng: -69.9717,
+    photo: 'https://www.btlt.org/wp-content/uploads/2016/10/muddy-river.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2026/03/Muddy-River-Wills-Preserve-Map_v2.pdf'
+  },
+  {
+    id: 'neptune-woods', name: 'Neptune Woods', town: 'Brunswick', org: 'btlt',
+    miles: 1.5, acres: 42, dogs: true,
+    activities: ['Walking', 'Cross-country Skiing'],
+    description: 'A 42-acre neighborhood preserve with trails through mixed forest, just minutes from downtown Brunswick.',
+    highlight: 'Close-to-town forest escape',
+    lat: 43.9050, lng: -69.9670, parkingLat: 43.9062, parkingLng: -69.9652,
+    photo: 'https://www.btlt.org/wp-content/uploads/2018/06/Neptune-Woods-1.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/BTLT-Neptune-Woods-Map-2019-1.pdf'
+  },
+  {
+    id: 'skolfield', name: 'Skolfield Preserve', town: 'Brunswick', org: 'btlt',
+    miles: 1.0, acres: 83, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: 'An 83-acre preserve featuring a quiet trail through forest and along the banks of the New Meadows River.',
+    highlight: 'New Meadows River banks',
+    lat: 43.8535, lng: -69.9491, parkingLat: 43.8540, parkingLng: -69.9485,
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/Skolfield-Trails.pdf'
+  },
+  {
+    id: 'smart', name: 'Lois Milliken Smart Preserve', town: 'Topsham', org: 'btlt',
+    miles: 0.5, acres: 19, dogs: true,
+    activities: ['Walking'],
+    description: 'A cozy 19-acre preserve with a short loop trail perfect for a quick nature walk in Topsham village.',
+    highlight: 'Quick village loop',
+    lat: 43.9505, lng: -69.9540, parkingLat: 43.9515, parkingLng: -69.9525,
+    photo: 'https://www.btlt.org/wp-content/uploads/2018/06/Smart-Preserve-1.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/Smart_Map.pdf'
+  },
+  {
+    id: 'tarbox', name: 'Tarbox Preserve', town: 'Topsham', org: 'btlt',
+    miles: 0.8, acres: 32, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: 'A 32-acre woodland preserve in the heart of Topsham with a loop trail through hemlock groves.',
+    highlight: 'Hemlock grove walk',
+    lat: 43.9477, lng: -69.9600, parkingLat: 43.9490, parkingLng: -69.9585,
+    photo: 'https://www.btlt.org/wp-content/uploads/2019/12/tarbox_by_Darcie_Moore.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/Tarbox-Trail-Map-2019-scaled.jpg'
+  },
+  {
+    id: 'woodward-cove', name: 'Woodward Cove Preserve', town: 'Brunswick', org: 'btlt',
+    miles: 0.5, acres: 9, dogs: true,
+    activities: ['Walking', 'Water Access'],
+    description: 'A tiny gem with a short trail to Woodward Cove, offering peaceful water access and views.',
+    highlight: 'Quiet cove access',
+    lat: 43.8530, lng: -69.9600, parkingLat: 43.8542, parkingLng: -69.9585,
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/BTLT-Woodward-Cove-Map-2019.pdf'
+  },
+  {
+    id: 'woodward-point', name: 'Woodward Point Preserve', town: 'Brunswick', org: 'btlt',
+    miles: 2.0, acres: 86, dogs: true,
+    activities: ['Walking', 'Birding', 'Water Access'],
+    description: 'An 86-acre coastal preserve at the end of a peninsula with trails offering panoramic views of Maquoit Bay.',
+    highlight: 'Maquoit Bay panorama',
+    lat: 43.8427, lng: -69.9732, parkingLat: 43.8445, parkingLng: -69.9715,
+    photo: 'https://www.btlt.org/wp-content/uploads/2016/10/woodward-point.jpg',
+    mapPdf: 'https://www.btlt.org/wp-content/uploads/2022/03/Woodward-Point-Trails-scaled.jpg'
+  },
+
+  // ===== HHLT TRAILS =====
+  {
+    id: 'hhlt-cliff-trail', name: 'Cliff Trail', town: 'Harpswell', org: 'hhlt',
+    miles: 2.3, acres: null, dogs: true,
+    activities: ['Walking', 'Scenic Views'],
+    description: 'Stunning 150-foot cliffs overlooking Long Reach with a rugged shore walk along tidal Strawberry Creek. Includes 0.4-mile accessible section.',
+    highlight: '150-foot coastal cliffs',
+    lat: 43.8140, lng: -69.9452,
+    photo: 'https://hhltmaine.org/wp-content/uploads/2013/05/2019-09-29-Cliff-Trail-Rich-Gould-1920x1080.jpg',
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-giants-stairs', name: "Giant's Stairs", town: 'Harpswell', org: 'hhlt',
+    miles: 0.5, acres: null, dogs: true,
+    activities: ['Walking', 'Scenic Views'],
+    description: 'Iconic rocky coastline walk featuring dramatic natural stone "stairs" carved by the ocean over millennia.',
+    highlight: 'Iconic rocky coastline walk',
+    lat: 43.7259, lng: -69.9927,
+    photo: 'https://hhltmaine.org/wp-content/uploads/2013/05/2020-08-05-Giants-Stairs-Ruth-Zumstein-1920x1080.jpg',
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-curtis-farm', name: 'Curtis Farm Preserve', town: 'Harpswell', org: 'hhlt',
+    miles: 2.0, acres: 80, dogs: true,
+    activities: ['Walking', 'Cross-country Skiing'],
+    description: 'An 80-acre historic farmland preserve with field and forest trails. Excellent views and diverse habitats.',
+    highlight: 'Historic farm fields & forest',
+    lat: 43.7820, lng: -69.9780,
+    photo: 'https://hhltmaine.org/wp-content/uploads/2013/04/2019-10-22-Curtis-Farm-Rich-Gould-1920x1080.jpg',
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-long-reach', name: 'Long Reach Preserve', town: 'Harpswell', org: 'hhlt',
+    miles: 1.5, acres: null, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: 'Trails through mixed forest with beautiful views along the tidal reach. Great for birding and quiet walks.',
+    highlight: 'Tidal Long Reach views',
+    lat: 43.7710, lng: -70.0085,
+    photo: 'https://hhltmaine.org/wp-content/uploads/2013/04/2020-08-18-Long-Reach-Ruth-Zumstein-1920x1080.jpg',
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-otter-brook', name: 'Otter Brook Preserve', town: 'Harpswell', org: 'hhlt',
+    miles: 1.0, acres: null, dogs: true,
+    activities: ['Walking'],
+    description: 'Peaceful woodland trails along a stream corridor. A quiet escape with diverse forest habitats.',
+    highlight: 'Stream corridor serenity',
+    lat: 43.7890, lng: -69.9925,
+    photo: 'https://hhltmaine.org/wp-content/uploads/2013/04/2019-04-13-Otter-Brook-Rich-Gould-1920x1080.jpg',
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-little-ponds', name: 'Little Ponds Preserve', town: 'Harpswell', org: 'hhlt',
+    miles: 0.7, acres: null, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: 'Quiet preserve with trails past small ponds and through mixed forest. Excellent for peaceful nature walks.',
+    highlight: 'Quiet ponds & birding',
+    lat: 43.7950, lng: -69.9820,
+    photo: 'https://hhltmaine.org/wp-content/uploads/2013/04/2019-09-25-Little-Ponds-Rich-Gould-1920x1080.jpg',
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-widgeon-cove', name: 'Widgeon Cove Trail', town: 'Harpswell', org: 'hhlt',
+    miles: 0.8, acres: null, dogs: true,
+    activities: ['Walking'],
+    description: 'Short trail through forest to scenic Widgeon Cove with water views and peaceful surroundings.',
+    highlight: 'Cove views through forest',
+    lat: 43.7810, lng: -69.9880,
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-skolfield-shores', name: 'Skolfield Shores Preserve', town: 'Harpswell', org: 'hhlt',
+    miles: 1.2, acres: null, dogs: true,
+    activities: ['Walking', 'Scenic Views'],
+    description: 'Preserved shoreline with trails through spruce-fir forest and dramatic water views.',
+    highlight: 'Spruce-fir coastal forest',
+    lat: 43.7630, lng: -70.0120,
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-tondreau', name: 'Tondreau Preserve', town: 'Harpswell', org: 'hhlt',
+    miles: 0.4, acres: null, dogs: true,
+    activities: ['Walking'],
+    description: 'Small preserve offering a short woodland walk on the Harpswell Neck.',
+    highlight: 'Quick woodland walk',
+    lat: 43.7760, lng: -70.0050,
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-potts-point', name: 'Potts Point Preserve', town: 'Harpswell', org: 'hhlt',
+    miles: 0.3, acres: null, dogs: true,
+    activities: ['Walking', 'Swimming', 'Beach'],
+    description: 'Extensive tide pools to explore, a gravel beach, and dramatic views of Casco Bay.',
+    highlight: 'Tide pools & Casco Bay views',
+    lat: 43.7315, lng: -70.0251,
+    photo: 'https://hhltmaine.org/wp-content/uploads/2013/04/2016-08-15-Potts-Point-DP-4-1-1920x1080.jpg',
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-devils-back', name: "Devil's Back Trail", town: 'Harpswell', org: 'hhlt',
+    miles: 3.5, acres: 36, dogs: true,
+    activities: ['Walking', 'Scenic Views'],
+    description: "Two loop trails on Orr's Island through mixed forest and along Gun Point Cove. Seals, osprey, and seabirds frequently spotted.",
+    highlight: "Rocky shoreline on Orr's Island",
+    lat: 43.7867, lng: -69.9492,
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-wilsons-cove', name: "Wilson's Cove Trail", town: 'Harpswell', org: 'hhlt',
+    miles: 0.6, acres: null, dogs: true,
+    activities: ['Walking', 'Scenic Views'],
+    description: 'Short trail to a scenic cove on the Harpswell Neck offering coastal views and a quiet walk.',
+    highlight: 'Scenic cove access',
+    lat: 43.8116, lng: -69.9748,
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-stovers-point', name: "Stover's Point Preserve", town: 'Harpswell', org: 'hhlt',
+    miles: 0.3, acres: null, dogs: true,
+    activities: ['Walking', 'Swimming', 'Water Access'],
+    description: 'Shoreline preserve with rocky beach access, tide pools, and views of Casco Bay. Popular swimming spot in summer.',
+    highlight: 'Rocky beach & swimming',
+    lat: 43.7480, lng: -69.9820,
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+  {
+    id: 'hhlt-hackett-minot', name: 'Hackett & Minot Trails', town: 'Harpswell', org: 'hhlt',
+    miles: 1.0, acres: null, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: 'Connected woodland trails through mixed forest on the Harpswell Neck. Peaceful birding and nature study.',
+    highlight: 'Connected woodland trails',
+    lat: 43.8143, lng: -69.9429,
+    mapPdf: 'https://hhltmaine.org/harpswell-trail-guides/'
+  },
+
+  // ===== KELT TRAILS =====
+  {
+    id: 'kelt-thorne-head', name: 'Thorne Head Preserve', town: 'Bath', org: 'kelt',
+    miles: 1.5, acres: null, dogs: true,
+    activities: ['Walking', 'Birding', 'Mountain Biking', 'Scenic Views'],
+    description: 'Popular near-town preserve with trails through mixed forest to the famous "Mushroom Cap" overlook with spectacular Kennebec estuary panoramas.',
+    highlight: 'Kennebec estuary panoramic views',
+    lat: 43.9428, lng: -69.8185,
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/7/70/Thorne_Head_Preserve_Trail%2C_Bath%2C_Maine%2C_US_%28PPL1-Corrected%29_julesvernex2.jpg',
+    mapPdf: 'https://www.kennebecestuary.org/s/Thorne-Head-Brochure-2018-19_final-69d2.pdf'
+  },
+  {
+    id: 'kelt-sewall-woods', name: 'Sewall Woods Preserve', town: 'Bath', org: 'kelt',
+    miles: 2.5, acres: 91, dogs: true,
+    activities: ['Walking', 'Birding', 'Mountain Biking'],
+    description: 'A 117-acre sustainably managed forest with 2,300+ feet of Whiskeag Creek frontage. Rare brackish tidal marsh habitat with 10 species of listed rare plants.',
+    highlight: 'Tidal marsh & rare plants',
+    lat: 43.9335, lng: -69.8216,
+    photo: 'https://images.squarespace-cdn.com/content/v1/5a317ed6c027d855f4b09294/1523566986185-NHDFALICKSCM8MDJ9F3U/20170429_092529.jpg',
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-lilly-pond', name: 'Lilly Pond Community Forest', town: 'Bath', org: 'kelt',
+    miles: 3.0, acres: null, dogs: true,
+    activities: ['Walking', 'Mountain Biking'],
+    description: 'Three miles of multi-use trails through mixed upland forests, rocky woodlands, and wetlands protecting 900 feet of Lilly Pond frontage.',
+    highlight: 'Three-loop woodland trail system',
+    lat: 43.8937, lng: -69.8207,
+    photo: 'https://images.squarespace-cdn.com/content/v1/5a317ed6c027d855f4b09294/1523567758540-P70PI8V79I80TN5ENUDF/IMG_2189.JPG',
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-whiskeag', name: 'Whiskeag Trail', town: 'Bath', org: 'kelt',
+    miles: 5.0, acres: null, dogs: true,
+    activities: ['Walking', 'Biking'],
+    description: 'A 5-mile trail connecting the Bath YMCA with Thorne Head Preserve through varied terrain along the scenic Whiskeag Creek corridor.',
+    highlight: '5-mile scenic corridor',
+    lat: 43.9308, lng: -69.8270,
+    photo: 'https://images.squarespace-cdn.com/content/v1/5a317ed6c027d855f4b09294/1523994859056-OEU68P343AKNKRILZXDZ/slide10-wide.jpg',
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-red-rose', name: 'Red Rose Preserve', town: 'Bowdoinham', org: 'kelt',
+    miles: 1.0, acres: 62, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: "KELT's first Bowdoinham preserve, a former dairy farm with rolling landscape through hayfields and quiet mixed forest with a perennial stream.",
+    highlight: 'Rolling farmland & birding',
+    lat: 44.0131, lng: -69.8930,
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-center-point', name: 'Center Point Preserve', town: 'Bowdoinham', org: 'kelt',
+    miles: 1.0, acres: null, dogs: false,
+    activities: ['Walking', 'Birding', 'Water Access'],
+    description: 'Exemplary natural community protecting tidal waterfowl habitat with eight rare, threatened and endangered plant species. Spectacular Merrymeeting Bay views.',
+    highlight: 'Merrymeeting Bay access',
+    lat: 43.9834, lng: -69.8657,
+    photo: 'https://images.squarespace-cdn.com/content/v1/5a317ed6c027d855f4b09294/1699386368377-9NDM78CAE2AXE2JNGT5W/IMG_1136.jpg',
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-higgins-mtn', name: 'Higgins Mountain', town: 'Georgetown', org: 'kelt',
+    miles: 0.8, acres: null, dogs: false,
+    activities: ['Walking', 'Scenic Views'],
+    description: 'Short loop to one of the highest points on Georgetown Island (259 ft) with stunning coastal views from bedrock outcrops. Notable blueberry and huckleberry patches.',
+    highlight: 'Summit views & wild blueberries',
+    lat: 43.8151, lng: -69.7567,
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-morse-pond', name: 'Morse Pond Preserve', town: 'Georgetown', org: 'kelt',
+    miles: 2.0, acres: 280, dogs: false,
+    activities: ['Walking', 'Birding', 'Cross-country Skiing'],
+    description: '280-acre preserve connecting to Reid State Park as part of a 1,800-acre conserved block. Rolling landscape with excellent birding and wildlife.',
+    highlight: 'Gateway to 1,800-acre wildlands',
+    lat: 43.8010, lng: -69.7253,
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-weber-kelly', name: 'Weber Kelly Preserve', town: 'Georgetown', org: 'kelt',
+    miles: 1.2, acres: null, dogs: true,
+    activities: ['Walking', 'Birding', 'Scenic Views'],
+    description: 'Mixed woods, salt marsh, and a historic pegmatite quarry. Part of a nationally significant wildlife habitat with osprey nests and rare plant species.',
+    highlight: 'Salt marsh & historic quarry',
+    lat: 43.7764, lng: -69.7656,
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-green-point', name: 'Green Point Preserve', town: 'West Bath', org: 'kelt',
+    miles: 1.5, acres: 45, dogs: true,
+    activities: ['Walking', 'Scenic Views'],
+    description: '45-acre preserve on Winnegance Bay at Green Point with rocky outcrops and views down the New Meadows River. Features the historic Indian Carry Road.',
+    highlight: 'New Meadows River overlooks',
+    lat: 43.8397, lng: -69.8560,
+    photo: 'https://images.squarespace-cdn.com/content/v1/5a317ed6c027d855f4b09294/1523984798801-XIXT12H6SIX4HIE58IB9/BKolak-Green-Point-Hike-012.jpg',
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-bonyun', name: 'Bonyun Preserve', town: 'Westport Island', org: 'kelt',
+    miles: 1.5, acres: 120, dogs: false,
+    activities: ['Walking', 'Birding'],
+    description: "120-acre preserve featuring six natural habitat zones from tidal inlet to old-growth woods. Historic Heal's Mill site from 1830 along the Sasanoa River.",
+    highlight: "Historic tidal mill & Sasanoa River",
+    lat: 43.8770, lng: -69.7192,
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-segerstrom', name: 'Segerstrom Preserve at Squam Creek', town: 'Westport Island', org: 'kelt',
+    miles: 1.5, acres: 159, dogs: true,
+    activities: ['Walking', 'Birding', 'Scenic Views'],
+    description: '159-acre preserve with 3,300 feet of Squam Creek shoreline. Blazed trails through hardwood forest past historic cellar holes and spectacular tidal salt marsh views.',
+    highlight: 'Squam Creek salt marsh views',
+    lat: 43.9058, lng: -69.7166,
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+  {
+    id: 'kelt-merrymeeting', name: 'Merrymeeting Fields Preserve', town: 'Woolwich', org: 'kelt',
+    miles: 2.0, acres: 125, dogs: false,
+    activities: ['Walking', 'Birding', 'Cross-country Skiing'],
+    description: '125-acre preserve with historic lighthouse overlook providing views of the Kennebec River and Merrymeeting Bay. Critical habitat with 7 bald eagle nests nearby.',
+    highlight: 'Historic lighthouse & eagle habitat',
+    lat: 43.9950, lng: -69.8192,
+    mapPdf: 'https://www.kennebecestuary.org/trails/'
+  },
+
+  // ===== TOWN / MUNICIPAL =====
+  {
+    id: 'town-commons', name: 'Brunswick Town Commons', town: 'Brunswick', org: 'town-brunswick',
+    miles: 5.0, acres: 71, dogs: true,
+    activities: ['Walking', 'Birding', 'Mountain Biking'],
+    description: "Brunswick's oldest park (est. 1719) with 71 acres and numerous interconnected trails through diverse ecosystems including rare pitch pine barrens. Mostly flat, family-friendly terrain.",
+    highlight: 'Historic park with pitch pine barrens',
+    lat: 43.9124, lng: -69.9634,
+    mapPdf: 'https://www.brunswickme.gov/facilities/facility/details/Town-Commons-28'
+  },
+  {
+    id: 'andro-bike-path', name: 'Androscoggin River Bike Path', town: 'Brunswick', org: 'town-brunswick',
+    miles: 2.6, acres: null, dogs: true,
+    activities: ['Walking', 'Biking'],
+    description: 'Paved two-lane riverside path along the south bank of the Androscoggin River from Water Street. Stone benches, restrooms, and scenic river views throughout.',
+    highlight: 'Paved riverside path',
+    lat: 43.9110, lng: -69.9346,
+    mapPdf: 'https://www.brunswickme.gov/facilities/facility/details/Androscoggin-River-Bicycle-Path-10'
+  },
+  {
+    id: 'cox-pinnacle', name: 'Cox Pinnacle', town: 'Brunswick', org: 'town-brunswick',
+    miles: 2.5, acres: 103, dogs: true,
+    activities: ['Walking'],
+    description: "103-acre park featuring Brunswick's highest point (350 ft elevation) with trails through forested hills and wetlands.",
+    highlight: "Brunswick's highest point",
+    lat: 43.9420, lng: -70.0626,
+    mapPdf: 'https://www.brunswickme.gov/facilities/facility/details/Cox-Pinnacle-14'
+  },
+  {
+    id: 'coffin-pond', name: 'Coffin Pond Recreation Area', town: 'Brunswick', org: 'town-brunswick',
+    miles: 0.5, acres: null, dogs: true,
+    activities: ['Walking', 'Swimming', 'Playground', 'Beach'],
+    description: 'Seasonal recreation area on a pond with swimming, playground, and short walking trails. Popular family destination.',
+    highlight: 'Swimming & family fun',
+    lat: 43.937, lng: -69.959,
+    mapPdf: 'https://www.brunswickme.gov/193/Coffin-Pond'
+  },
+  {
+    id: 'foreside-trails', name: 'Foreside Trails', town: 'Topsham', org: 'town-topsham',
+    miles: 2.4, acres: null, dogs: true,
+    activities: ['Walking', 'Biking', 'Cross-country Skiing'],
+    description: 'Leisure paths along the Androscoggin River bordering athletic fields. Well-lit area with playgrounds, picnic areas, and winter activities.',
+    highlight: 'Riverside paths & recreation',
+    lat: 43.928, lng: -69.980,
+    mapPdf: 'https://www.topshammaine.com/'
+  },
+  {
+    id: 'bath-waterfront', name: 'Waterfront Park', town: 'Bath', org: 'town-bath',
+    miles: 0.5, acres: null, dogs: true,
+    activities: ['Walking', 'Scenic Views', 'Picnicking'],
+    description: 'Large park along the historic Kennebec River district with boat docks, farmers market (Sat May-Oct), and beautiful riverfront views.',
+    highlight: 'Kennebec River waterfront',
+    lat: 43.9098, lng: -69.8202,
+    mapPdf: 'https://www.cityofbathmaine.gov/'
+  },
+  {
+    id: 'harpswell-mitchell', name: 'Mitchell Field', town: 'Harpswell', org: 'town-harpswell',
+    miles: 3.0, acres: 120, dogs: true,
+    activities: ['Walking', 'Biking', 'Swimming', 'Beach'],
+    description: '120-acre former Navy fuel depot with miles of paved and gravel paths, woodland trails among old growth trees, sandy beach, and seasonal outdoor concerts.',
+    highlight: 'Oceanside paths & sandy beach',
+    lat: 43.7712, lng: -70.0089,
+    photo: 'https://hhltmaine.org/wp-content/uploads/2013/04/2016-07-27-Mitchell-Field-DP-3-1920x1080.jpg',
+    mapPdf: 'https://www.harpswell.maine.gov/'
+  },
+  {
+    id: 'harpswell-houghton', name: 'Houghton Graves Park', town: 'Harpswell', org: 'town-harpswell',
+    miles: 0.3, acres: null, dogs: true,
+    activities: ['Walking', 'Scenic Views', 'Picnicking'],
+    description: "Small community park on Orr's Island with mowed paths leading to picnic tables and views of Beal's Cove on Harpswell Sound.",
+    highlight: "Beal's Cove harbor views",
+    lat: 43.7606, lng: -69.9770,
+    mapPdf: 'https://www.harpswell.maine.gov/'
+  },
+
+  // ===== STATE PARKS =====
+  {
+    id: 'popham-beach', name: 'Popham Beach State Park', town: 'Phippsburg', org: 'state',
+    miles: 2.5, acres: 605, dogs: 'seasonal',
+    activities: ['Walking', 'Beach', 'Swimming', 'Birding'],
+    description: 'One of Maine\'s most popular beaches with 605 acres of sand dunes, tidal pools, and spectacular views of the Kennebec River mouth. Dogs allowed Oct 1 - Mar 31 only.',
+    highlight: 'Premier sandy beach & dunes',
+    lat: 43.7384, lng: -69.7983,
+    mapPdf: 'https://www.maine.gov/dacf/parks/water_activities/popham_beach_conditions.shtml'
+  },
+  {
+    id: 'reid-state-park', name: 'Reid State Park', town: 'Georgetown', org: 'state',
+    miles: 3.5, acres: 770, dogs: 'seasonal',
+    activities: ['Walking', 'Beach', 'Swimming', 'Scenic Views', 'Birding'],
+    description: 'Georgetown\'s beloved 770-acre park with two sandy beaches (Mile Beach and Half Mile Beach), rocky headlands, salt marshes, and tidal lagoons. Dogs Oct 1 - Mar 31.',
+    highlight: 'Sandy beaches & rocky headlands',
+    lat: 43.7933, lng: -69.7199,
+    mapPdf: 'https://www.maine.gov/dacf/parks/water_activities/reid_beach_conditions.shtml'
+  },
+  {
+    id: 'wolfes-neck', name: "Wolfe's Neck Woods State Park", town: 'Freeport', org: 'state',
+    miles: 5.0, acres: 244, dogs: true,
+    activities: ['Walking', 'Birding', 'Scenic Views'],
+    description: '244-acre park on a peninsula between the Harraseeket River and Casco Bay. White pine and hemlock forests, osprey nest views on Googins Island, and shoreline trails.',
+    highlight: 'Osprey nests & Casco Bay shore',
+    lat: 43.8227, lng: -70.0882,
+    mapPdf: 'https://www.maine.gov/dacf/parks/trail_activities/wolfesneck_trail_conditions.shtml'
+  },
+  {
+    id: 'bradbury-mountain', name: 'Bradbury Mountain State Park', town: 'Pownal', org: 'state',
+    miles: 7.0, acres: 730, dogs: true,
+    activities: ['Walking', 'Hiking', 'Mountain Biking', 'Scenic Views', 'Camping'],
+    description: '730-acre park with a summit trail offering panoramic views of Casco Bay. 21+ miles of multi-use trails, campground, and connections to Pineland Trails network.',
+    highlight: 'Summit views & trail network',
+    lat: 43.8992, lng: -70.1791,
+    mapPdf: 'https://www.maine.gov/dacf/parks/trail_activities/bradbury_trail_conditions.shtml'
+  },
+
+  // ===== PHIPPSBURG =====
+  {
+    id: 'fort-popham', name: 'Fort Popham Historic Site', town: 'Phippsburg', org: 'state',
+    miles: 0.3, acres: null, dogs: true,
+    activities: ['Walking', 'Historic Site', 'Scenic Views'],
+    description: 'Unfinished Civil War-era granite fortification at the mouth of the Kennebec River. Panoramic ocean views and adjacent beach. Open seasonally.',
+    highlight: 'Civil War fort & ocean views',
+    lat: 43.7551, lng: -69.7834,
+    mapPdf: 'https://www.maine.gov/dacf/parks/'
+  },
+  {
+    id: 'bates-morse-mountain', name: 'Bates-Morse Mountain Conservation Area', town: 'Phippsburg', org: 'bates',
+    miles: 3.8, acres: 600, dogs: false,
+    activities: ['Walking', 'Hiking', 'Beach', 'Birding'],
+    description: '600-acre undeveloped conservation area with a 2-mile walk to pristine Seawall Beach. Summit trail to Morse Mountain (180 ft) with coastal panoramas. No dogs, no bikes.',
+    highlight: 'Pristine Seawall Beach & summit',
+    lat: 43.7449, lng: -69.8375,
+    mapPdf: 'https://www.bates.edu/bates-morse-mountain-shortridge/visiting/'
+  },
+  {
+    id: 'plt-center-pond', name: 'Center Pond Preserve', town: 'Phippsburg', org: 'plt',
+    miles: 6.5, acres: 253, dogs: true,
+    activities: ['Walking', 'Hiking', 'Cross-country Skiing', 'Birding'],
+    description: '253-acre preserve (also called Cooley Preserve) with 6.5 miles of trails through varied terrain, including pond shores, mixed forests, and wetlands.',
+    highlight: 'Extensive trail network',
+    lat: 43.7750, lng: -69.8300,
+    mapPdf: 'https://phippsburglandtrust.org/'
+  },
+  {
+    id: 'plt-spirit-pond', name: 'Spirit Pond Preserve', town: 'Phippsburg', org: 'plt',
+    miles: 3.3, acres: null, dogs: true,
+    activities: ['Walking', 'Birding'],
+    description: 'Trails through mixed forest and along the shores of Spirit Pond, a tidal pond connected to the sea. Rich bird habitat and peaceful woodland walks.',
+    highlight: 'Tidal pond & birding',
+    lat: 43.7515, lng: -69.8074,
+    mapPdf: 'https://phippsburglandtrust.org/'
+  },
+  {
+    id: 'plt-sprague-pond', name: 'Sprague Pond Preserve', town: 'Phippsburg', org: 'plt',
+    miles: 3.5, acres: 114, dogs: true,
+    activities: ['Walking', 'Birding', 'Cross-country Skiing'],
+    description: '114-acre preserve with trails around a scenic freshwater pond. Mixed forest habitat with good birding and peaceful walks.',
+    highlight: 'Freshwater pond trails',
+    lat: 43.7700, lng: -69.8230,
+    mapPdf: 'https://phippsburglandtrust.org/'
+  },
+  {
+    id: 'basin-preserve', name: 'Basin Preserve', town: 'Phippsburg', org: 'tnc',
+    miles: 5.8, acres: 1910, dogs: true,
+    activities: ['Walking', 'Hiking', 'Birding', 'Water Access'],
+    description: "The Nature Conservancy's massive 1,910-acre preserve featuring the Basin, a unique reversing tidal lagoon. Miles of trails through diverse habitats. Dogs on leash on some trails.",
+    highlight: 'Reversing tidal lagoon',
+    lat: 43.7280, lng: -69.8450,
+    mapPdf: 'https://www.nature.org/en-us/get-involved/how-to-help/places-we-protect/me-basin-preserve/'
+  },
+
+  // ===== WEST BATH =====
+  {
+    id: 'hamilton-audubon', name: 'Hamilton Audubon Sanctuary', town: 'West Bath', org: 'audubon',
+    miles: 2.5, acres: 86, dogs: false,
+    activities: ['Walking', 'Birding'],
+    description: '86-acre Maine Audubon sanctuary with trails through mature forest along the New Meadows River. No dogs allowed to protect sensitive bird habitat.',
+    highlight: 'New Meadows River birding',
+    lat: 43.8647, lng: -69.8842,
+    mapPdf: 'https://maineaudubon.org/visit/hamilton/'
+  },
+
+  // ===== BOWDOIN COLLEGE =====
+  {
+    id: 'schiller-center', name: 'Schiller Coastal Studies Center', town: 'Harpswell', org: 'bowdoin',
+    miles: 3.6, acres: 118, dogs: false,
+    activities: ['Walking', 'Birding', 'Scenic Views'],
+    description: "Bowdoin College's 118-acre coastal studies center on Orr's Island with 3.6 miles of trails through spruce-fir forest and along the rocky shore. Open to public dawn to dusk.",
+    highlight: "Orr's Island coastal trails",
+    lat: 43.7886, lng: -69.9577,
+    mapPdf: 'https://www.bowdoin.edu/coastal-studies-center/'
+  },
+
+  // ===== ISLANDS =====
+  {
+    id: 'eagle-island', name: 'Eagle Island', town: 'Harpswell', org: 'state',
+    miles: 0.5, acres: 17, dogs: true, island: true,
+    activities: ['Walking', 'Historic Site', 'Scenic Views', 'Island Access'],
+    description: "Former home of Admiral Robert Peary, this 17-acre state historic site in Casco Bay is accessible by seasonal excursion boats from Harpswell. Trails, museum, and panoramic views.",
+    highlight: "Peary's island & museum",
+    lat: 43.7112, lng: -70.0539,
+    mapPdf: 'https://www.maine.gov/dacf/parks/'
+  },
+  {
+    id: 'jewell-island', name: 'Jewell Island', town: 'Portland (Casco Bay)', org: 'state',
+    miles: 3.3, acres: 221, dogs: true, island: true,
+    activities: ['Walking', 'Hiking', 'Camping', 'Scenic Views', 'Island Access'],
+    description: '221-acre island in outer Casco Bay with WWII observation towers, campsites, and 3.3 miles of trails. Boat access only. Part of Maine Island Trail.',
+    highlight: 'WWII towers & remote camping',
+    lat: 43.6820, lng: -70.0925,
+    mapPdf: 'https://www.maine.gov/dacf/parks/'
+  },
+  {
+    id: 'whaleboat-island', name: 'Whaleboat Island', town: 'Harpswell', org: 'mcht',
+    miles: 1.0, acres: 122, dogs: false, island: true,
+    activities: ['Walking', 'Camping', 'Scenic Views', 'Island Access'],
+    description: '122-acre MCHT island with primitive campsites, rocky shores, and interior trails. Boat access only. Part of Maine Island Trail.',
+    highlight: 'Remote island camping',
+    lat: 43.7532, lng: -70.0531,
+    mapPdf: 'https://www.mcht.org/'
+  },
+  {
+    id: 'malaga-island', name: 'Malaga Island', town: 'Phippsburg', org: 'mcht',
+    miles: 1.4, acres: 42, dogs: false, island: true,
+    activities: ['Walking', 'Historic Site', 'Scenic Views', 'Island Access'],
+    description: "42-acre island in the New Meadows River with a deeply important Maine history. MCHT preserve with trails and interpretive information. Boat access only.",
+    highlight: 'Historic island & interpretation',
+    lat: 43.7818, lng: -69.8751,
+    mapPdf: 'https://www.mcht.org/'
+  }
+];
+
+// ===== POPULATE TOWN DROPDOWN =====
+const towns = [...new Set(trails.map(t => t.town))].sort();
+const townSelect = document.getElementById('town-select');
+towns.forEach(t => {
+  const opt = document.createElement('option');
+  opt.value = t; opt.textContent = t;
+  townSelect.appendChild(opt);
+});
+
+// ===== LAYOUT MANAGER =====
+let introVisible = !localStorage.getItem('intro-dismissed');
+
+function updateLayout() {
+  const intro = document.getElementById('intro-banner');
+  const toggle = document.getElementById('view-toggle');
+  const filterBar = document.getElementById('filter-bar');
+  const mapEl = document.getElementById('map');
+  const searchBox = document.getElementById('search-box');
+  const listView = document.getElementById('list-view');
+
+  const introH = introVisible ? intro.offsetHeight : 0;
+  const toggleH = toggle.offsetHeight || 39;
+  const filterH = filterBar.offsetHeight || 44;
+
+  const toggleTop = 56 + introH;
+  const filterTop = toggleTop + toggleH;
+  const contentTop = filterTop + filterH;
+
+  toggle.style.top = toggleTop + 'px';
+  filterBar.style.top = filterTop + 'px';
+  mapEl.style.top = contentTop + 'px';
+  searchBox.style.top = contentTop + 'px';
+  listView.style.top = (contentTop + 46) + 'px';
+
+  // Tell Leaflet the container size changed
+  if (typeof map !== 'undefined' && map) {
+    setTimeout(() => map.invalidateSize(), 50);
+  }
+}
+
+function dismissIntro() {
+  introVisible = false;
+  document.getElementById('intro-banner').classList.add('hidden');
+  localStorage.setItem('intro-dismissed', '1');
+  setTimeout(updateLayout, 350);
+}
+
+// Initial layout — wait for fonts & rendering, then set positions + tell map
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(updateLayout, 100);
+});
+// Fallback in case DOMContentLoaded already fired
+setTimeout(updateLayout, 150);
+
+// Re-layout on resize / orientation change
+window.addEventListener('resize', () => {
+  updateLayout();
+});
+window.addEventListener('orientationchange', () => {
+  setTimeout(updateLayout, 200);
+});
+
+// ===== WEATHER SYSTEM =====
+const hikeQuips = {
+  sunny: [
+    "Sun's out, boots out! Hit those trails!",
+    "Peak trail weather \u2014 vitamin D and vitamin Tree!",
+    "Solar-powered hiking today \u2014 no batteries required!",
+    "The trailhead is calling and you must go!"
+  ],
+  partlyCloudy: [
+    "Partly cloudy, fully awesome hiking weather!",
+    "Cloud cover makes the canopy pop \u2014 tree-mendous views ahead!",
+    "A few clouds never hurt any hiker \u2014 they're just nature's parasol!",
+    "50% cloud, 100% trail-ready!"
+  ],
+  cloudy: [
+    "Overcast? More like over-CAST your worries aside on the trail!",
+    "Gray skies = the forest's best selfie lighting!",
+    "No sunscreen needed \u2014 it's a no-burn-no-squint kind of hike!",
+    "Cloudy with a chance of trail magic!"
+  ],
+  rain: [
+    "No such thing as bad weather, just unprepared hikers \u2014 muck boots on!",
+    "Rain makes the trail a puddle-jumping obstacle course!",
+    "Wet trails = fewer crowds + happy salamanders. Win-win!",
+    "Today's forecast: 100% chance of splashing!",
+    "April showers bring trail-side wildflowers \u2014 just a month early!"
+  ],
+  snow: [
+    "Fresh powder = fresh adventure! Snowshoe o'clock!",
+    "The trails got a fresh coat of white \u2014 snow joke, it's beautiful!",
+    "Track-making season! Leave your mark on the trail!",
+    "Winter hiking: where every step is a *cool* experience!"
+  ],
+  wind: [
+    "Breezy out there \u2014 the trees are giving you a standing ovation!",
+    "Wind keeps the bugs away \u2014 that's what we call a breeze-ing!",
+    "Hold onto your hat, but don't hold back on the hike!",
+    "A little wind builds character... and calves!"
+  ],
+  fog: [
+    "Foggy trails have main character energy \u2014 very mysterious!",
+    "Mist-ical morning hike? That's peak peaceful!",
+    "The forest is doing its best impression of a fantasy novel!",
+    "You can't see far, but you can hike far!"
+  ],
+  storm: [
+    "Maybe a hot cocoa day \u2014 trail-planning from the couch counts as hiking prep!",
+    "Storm day = the trails are recharging for tomorrow!",
+    "Today: armchair hiking. Tomorrow: the real thing!"
+  ],
+  cold: [
+    "Crisp air, clear head \u2014 layer up and summit something!",
+    "Cold outside = the best excuse for a brisk trail pace!",
+    "Rosy cheeks are the badge of a real winter hiker!",
+    "It's not cold, it's *refreshing* out there!"
+  ],
+  hot: [
+    "Forest trails are nature's A/C \u2014 shady and 10 degrees cooler!",
+    "Hot out? Head for the water trails \u2014 splash zone awaits!",
+    "Early bird gets the cool trail temps! Rise and hike!",
+    "Bring extra water \u2014 hydra-tion is the foundation of hike-ation!"
+  ]
+};
+
+function getWeatherCategory(forecast, temp) {
+  const desc = forecast.toLowerCase();
+  if (desc.includes('thunder') || desc.includes('storm')) return 'storm';
+  if (desc.includes('snow') || desc.includes('sleet') || desc.includes('blizzard')) return 'snow';
+  if (desc.includes('rain') || desc.includes('drizzle') || desc.includes('shower')) return 'rain';
+  if (desc.includes('fog') || desc.includes('mist') || desc.includes('haze')) return 'fog';
+  if (desc.includes('wind') || desc.includes('breezy') || desc.includes('gusty')) return 'wind';
+  if (desc.includes('cloud') || desc.includes('overcast')) {
+    return desc.includes('partly') || desc.includes('mostly sunny') ? 'partlyCloudy' : 'cloudy';
+  }
+  if (temp !== null) {
+    if (temp <= 25) return 'cold';
+    if (temp >= 85) return 'hot';
+  }
+  return 'sunny';
+}
+
+function getWeatherEmoji(cat) {
+  return { sunny: '\u2600\uFE0F', partlyCloudy: '\u26C5', cloudy: '\u2601\uFE0F',
+    rain: '\uD83C\uDF27\uFE0F', snow: '\u2744\uFE0F', wind: '\uD83C\uDF2C\uFE0F',
+    fog: '\uD83C\uDF2B\uFE0F', storm: '\u26C8\uFE0F', cold: '\uD83E\uDD76', hot: '\uD83E\uDD75'
+  }[cat] || '\uD83C\uDF24\uFE0F';
+}
+
+function pickQuip(cat, seed) {
+  const q = hikeQuips[cat] || hikeQuips.sunny;
+  const day = Math.floor(Date.now() / 86400000);
+  const idx = (day + (seed || 0)) % q.length;
+  return q[idx];
+}
+
+let weatherCache = {};
+
+async function fetchWeatherForCoord(lat, lng) {
+  const key = `${lat.toFixed(2)},${lng.toFixed(2)}`;
+  if (weatherCache[key]) return weatherCache[key];
+
+  try {
+    const ptRes = await fetch(`https://api.weather.gov/points/${lat.toFixed(4)},${lng.toFixed(4)}`, {
+      headers: { 'User-Agent': 'MidcoastTrailGuide/1.0' }
+    });
+    const ptData = await ptRes.json();
+    const fcRes = await fetch(ptData.properties.forecast, {
+      headers: { 'User-Agent': 'MidcoastTrailGuide/1.0' }
+    });
+    const fcData = await fcRes.json();
+    const periods = fcData.properties.periods;
+
+    const today = periods[0];
+    const tomorrow = periods.find((p, i) => i > 0 && p.isDaytime) || periods[1];
+
+    const todayCat = getWeatherCategory(today.shortForecast, today.temperature);
+    const tomorrowCat = tomorrow ? getWeatherCategory(tomorrow.shortForecast, tomorrow.temperature) : todayCat;
+
+    const result = {
+      today: {
+        temp: today.temperature, unit: today.temperatureUnit,
+        desc: today.shortForecast, cat: todayCat,
+        emoji: getWeatherEmoji(todayCat), quip: pickQuip(todayCat, 0),
+        label: today.name || 'Today'
+      },
+      tomorrow: tomorrow ? {
+        temp: tomorrow.temperature, unit: tomorrow.temperatureUnit,
+        desc: tomorrow.shortForecast, cat: tomorrowCat,
+        emoji: getWeatherEmoji(tomorrowCat), quip: pickQuip(tomorrowCat, 7),
+        label: tomorrow.name || 'Tomorrow'
+      } : null
+    };
+
+    weatherCache[key] = result;
+    return result;
+  } catch (e) {
+    return null;
+  }
+}
+
+let regionWeather = null;
+async function loadRegionWeather() {
+  regionWeather = await fetchWeatherForCoord(43.91, -69.97);
+}
+loadRegionWeather();
+
+// ===== MAP SETUP =====
+const map = L.map('map', {
+  zoomControl: false, attributionControl: true
+}).setView([43.85, -69.92], 10);
+
+L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> | Midcoast Trail Guide',
+  maxZoom: 18
+}).addTo(map);
+
+// ===== MARKERS =====
+let markers = [];
+
+function createTrailIcon(isActive) {
+  return L.divIcon({
+    className: '',
+    html: `<div class="trail-pin${isActive ? ' active' : ''}">${treeSvg}</div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -16]
+  });
+}
+
+function addMarkers(filteredTrails) {
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  filteredTrails.forEach(t => {
+    const marker = L.marker([t.lat, t.lng], {
+      icon: createTrailIcon(false)
+    }).addTo(map);
+
+    const statusHtml = t.status ? `<div class="status-closed" style="margin-top:6px">${t.status}</div>` : '';
+    const islandTag = t.island ? ' \u{26F5} Island' : '';
+
+    marker.bindPopup(`
+      <div class="popup-title">${t.name}</div>
+      <div class="popup-meta">${t.town} \u2022 ${t.miles} mi${t.acres ? ' \u2022 ' + t.acres + ' acres' : ''}${islandTag}</div>
+      ${statusHtml}
+      <button class="popup-btn" onclick="openDetail('${t.id}')">Explore \u2192</button>
+    `, { maxWidth: 260 });
+
+    markers.push(marker);
+  });
+}
+addMarkers(trails);
+
+// ===== VIEW SWITCHING =====
+function showView(view) {
+  document.getElementById('btn-map').classList.toggle('active', view === 'map');
+  document.getElementById('btn-list').classList.toggle('active', view === 'list');
+  document.getElementById('map').classList.toggle('hidden', view !== 'map');
+  document.getElementById('list-view').classList.toggle('hidden', view !== 'list');
+  document.getElementById('search-box').classList.toggle('hidden', view !== 'list');
+  if (view === 'map') setTimeout(() => map.invalidateSize(), 100);
+}
+
+// ===== FILTERING =====
+let currentActivityFilter = 'all';
+let searchQuery = '';
+
+function setActivityFilter(filter, el) {
+  currentActivityFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function applySearch() {
+  searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+  applyFilters();
+}
+
+function applyFilters() {
+  const townFilter = document.getElementById('town-select').value;
+
+  const filtered = trails.filter(t => {
+    // Town filter
+    if (townFilter !== 'all' && t.town !== townFilter) return false;
+
+    // Activity filter
+    let passActivity = true;
+    switch (currentActivityFilter) {
+      case 'dogs': passActivity = t.dogs === true; break;
+      case 'long': passActivity = t.miles >= 1.0; break;
+      case 'beach': passActivity = t.activities.includes('Beach'); break;
+      case 'island': passActivity = !!t.island; break;
+      case 'water': passActivity = t.activities.some(a => ['Water Access','Swimming','Kayak Launch','Fishing','Beach'].includes(a)); break;
+      case 'biking': passActivity = t.activities.some(a => ['Biking','Mountain Biking'].includes(a)); break;
+      case 'views': passActivity = t.activities.includes('Scenic Views'); break;
+    }
+    if (!passActivity) return false;
+
+    // Search
+    if (searchQuery) {
+      return t.name.toLowerCase().includes(searchQuery) ||
+             t.town.toLowerCase().includes(searchQuery) ||
+             (t.highlight && t.highlight.toLowerCase().includes(searchQuery)) ||
+             (t.description && t.description.toLowerCase().includes(searchQuery));
+    }
+    return true;
+  });
+
+  addMarkers(filtered);
+  renderList(filtered);
+  if (filtered.length > 0 && markers.length > 0) {
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.1));
+  }
+}
+
+// ===== TAG STYLE =====
+function tagClass(activity) {
+  if (['Water Access','Swimming','Fishing','Kayak Launch'].includes(activity)) return 'water';
+  if (['Mountain Biking','Biking','ATV'].includes(activity)) return 'bike';
+  if (['Beach'].includes(activity)) return 'beach';
+  if (['Island Access'].includes(activity)) return 'island';
+  return '';
+}
+
+// ===== DOG STATUS DISPLAY =====
+function dogDisplay(dogs) {
+  if (dogs === true) return { icon: '\u2705', label: 'Leashed' };
+  if (dogs === 'seasonal') return { icon: '\u{1F551}', label: 'Seasonal' };
+  return { icon: '\u274C', label: 'No Dogs' };
+}
+
+// ===== LIST RENDERING =====
+function renderList(trailList) {
+  const container = document.getElementById('list-view');
+  const countText = trailList.length === trails.length
+    ? `${trailList.length} places to explore`
+    : `Showing ${trailList.length} of ${trails.length} places`;
+
+  container.innerHTML = `
+    <div class="list-header">${countText}</div>
+    <div class="trail-cards-grid">
+      ${trailList.map(t => {
+        const w = regionWeather;
+        const dogInfo = dogDisplay(t.dogs);
+        const weatherHtml = w ? `
+          <div class="card-weather">
+            <span class="cw-emoji">${w.today.emoji}</span>
+            <span class="cw-text"><span class="cw-temp">${w.today.temp}\u00B0${w.today.unit}</span> ${w.today.desc} \u2014 <span class="cw-quip">${w.today.quip}</span></span>
+          </div>` : '';
+
+        return `
+        <div class="trail-card ${t.status ? 'closed' : ''}" onclick="openDetail('${t.id}')">
+          ${t.photo
+            ? `<img class="card-photo" src="${t.photo}" alt="${t.name}" loading="lazy" onerror="handleImgError(this)">`
+            : `<div class="card-photo-placeholder">${treeSvg}</div>`}
+          <div class="card-top">
+            <div class="card-title-area">
+              <h3>${t.name}</h3>
+              <div class="card-subtitle">
+                <span>${t.town}</span>
+                ${t.island ? '<span>\u2022</span><span>\u{26F5} Island</span>' : ''}
+                ${t.status ? `<span>\u2022</span><span class="status-closed" style="margin:0;padding:2px 8px;font-size:10px">${t.status}</span>` : `<span>\u2022</span><span>${t.highlight}</span>`}
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-stats">
+              <div class="card-stat">
+                <div class="val">${t.miles}</div>
+                <div class="lbl">Miles</div>
+              </div>
+              ${t.acres ? `<div class="card-stat">
+                <div class="val">${t.acres}</div>
+                <div class="lbl">Acres</div>
+              </div>` : ''}
+              <div class="card-stat">
+                <div class="val">${dogInfo.icon}</div>
+                <div class="lbl">Dogs</div>
+              </div>
+            </div>
+            <div class="card-tags">
+              ${t.activities.slice(0, 3).map(a =>
+                `<span class="trail-tag ${tagClass(a)}">${activityEmoji[a] || ''} ${a}</span>`
+              ).join('')}
+            </div>
+          </div>
+          ${weatherHtml}
+        </div>
+      `}).join('')}
+    </div>
+  `;
+}
+renderList(trails);
+
+// Re-render list once weather loads
+async function weatherReady() {
+  for (let i = 0; i < 10; i++) {
+    if (regionWeather) { applyFilters(); return; }
+    await new Promise(r => setTimeout(r, 500));
+  }
+}
+weatherReady();
+
+// ===== DETAIL PANEL =====
+let detailMap = null;
+
+function openDetail(id) {
+  const t = trails.find(tr => tr.id === id);
+  if (!t) return;
+
+  const panel = document.getElementById('detail-panel');
+  const info = orgInfo[t.org] || { name: 'Unknown', website: '#' };
+  const dogInfo = dogDisplay(t.dogs);
+
+  const statusHtml = t.status
+    ? `<div class="status-closed" style="margin:12px 16px 0;padding:10px 14px;font-size:13px;border-radius:10px">
+         ${t.status}${t.statusNote ? ': ' + t.statusNote : ''}
+       </div>`
+    : '';
+
+  const heroStyle = t.photo ? `background-image:url('${t.photo}')` : '';
+  const directionsCoord = t.parkingLat ? `${t.parkingLat},${t.parkingLng}` : `${t.lat},${t.lng}`;
+
+  // Weather section
+  const w = regionWeather;
+  const weatherSection = w ? `
+    <div class="detail-weather">
+      <div class="detail-weather-header">\u{26C5} Trail Forecast</div>
+      <div class="dw-row">
+        <span class="dw-emoji">${w.today.emoji}</span>
+        <div class="dw-info">
+          <div class="dw-label">${w.today.label}</div>
+          <div><span class="dw-temp">${w.today.temp}\u00B0${w.today.unit}</span> <span class="dw-desc">${w.today.desc}</span></div>
+        </div>
+      </div>
+      ${w.tomorrow ? `<div class="dw-row">
+        <span class="dw-emoji">${w.tomorrow.emoji}</span>
+        <div class="dw-info">
+          <div class="dw-label">${w.tomorrow.label}</div>
+          <div><span class="dw-temp">${w.tomorrow.temp}\u00B0${w.tomorrow.unit}</span> <span class="dw-desc">${w.tomorrow.desc}</span></div>
+        </div>
+      </div>` : ''}
+      <div class="dw-quip">\u{1F97E} ${w.today.quip}</div>
+    </div>
+  ` : '';
+
+  // Dog note for seasonal
+  const dogNote = t.dogs === 'seasonal' ? '<p style="font-size:12px;color:#b35b27;margin-top:6px;font-weight:600">\u{1F551} Dogs allowed seasonally (typically Oct\u2013Mar). Check current rules before visiting.</p>' : '';
+
+  // Island note
+  const islandNote = t.island ? '<p style="font-size:12px;color:#00695c;margin-top:6px;font-weight:600">\u{26F5} This is an island \u2014 boat access required. Check seasonal ferry/excursion availability.</p>' : '';
+
+  panel.innerHTML = `
+    <div class="detail-hero${t.photo ? ' has-photo' : ''}"${heroStyle ? ` style="${heroStyle}"` : ''}>
+      <div class="trees"><svg viewBox="0 0 24 24" style="width:32px;height:32px;fill:rgba(255,255,255,0.25)"><path d="M12 2L4 14h4l-3 8h14l-3-8h4L12 2z"/></svg><svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:rgba(255,255,255,0.15);margin-left:6px"><path d="M12 2L4 14h4l-3 8h14l-3-8h4L12 2z"/></svg></div>
+      <button class="detail-back" onclick="closeDetail()">\u2190</button>
+      <h2>${t.name}</h2>
+      <div class="hero-meta">
+        <span>${t.town}, Maine</span>
+        <span>\u2022</span>
+        <span>${t.miles} mi</span>
+        ${t.acres ? `<span>\u2022</span><span>${t.acres} acres</span>` : ''}
+        ${t.island ? `<span>\u2022</span><span>\u{26F5} Island</span>` : ''}
+      </div>
+    </div>
+
+    ${statusHtml}
+
+    <div class="detail-content">
+      ${weatherSection}
+
+      <div class="detail-map" id="detail-map-container"></div>
+
+      <div class="detail-stats">
+        <div class="stat-box">
+          <div class="label">Distance</div>
+          <div class="value">${t.miles}</div>
+          <div class="unit">miles</div>
+        </div>
+        ${t.acres ? `<div class="stat-box">
+          <div class="label">Size</div>
+          <div class="value">${t.acres}</div>
+          <div class="unit">acres</div>
+        </div>` : ''}
+        <div class="stat-box">
+          <div class="label">Dogs</div>
+          <div class="value">${dogInfo.icon}</div>
+          <div class="unit">${dogInfo.label}</div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>About This Place</h4>
+        <p>${t.description}</p>
+        ${dogNote}
+        ${islandNote}
+      </div>
+
+      <div class="detail-section">
+        <h4><span class="icon">\u{1F3AF}</span> Highlight</h4>
+        <p style="font-weight:600;color:var(--brand-green)">${t.highlight}</p>
+      </div>
+
+      <div class="detail-section">
+        <h4><span class="icon">\u{1F3C3}</span> Activities</h4>
+        <div class="card-tags" style="gap:8px">
+          ${t.activities.map(a =>
+            `<span class="trail-tag ${tagClass(a)}" style="padding:6px 12px;font-size:12px">${activityEmoji[a] || ''} ${a}</span>`
+          ).join('')}
+          ${t.dogs === true
+            ? '<span class="trail-tag dog-yes" style="padding:6px 12px;font-size:12px">\u{1F436} Dogs OK (leashed)</span>'
+            : t.dogs === 'seasonal'
+            ? '<span class="trail-tag" style="padding:6px 12px;font-size:12px;background:#fff3e0;color:#e65100">\u{1F436} Dogs (seasonal)</span>'
+            : '<span class="trail-tag dog-no" style="padding:6px 12px;font-size:12px">\u{1F6AB} No Dogs</span>'}
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4><span class="icon">\u{1F3E2}</span> Managed By</h4>
+        <p><a href="${info.website}" target="_blank" style="color:var(--brand-green);font-weight:600;text-decoration:none">${info.name} \u2197</a></p>
+      </div>
+
+      <div class="detail-actions">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=${directionsCoord}" target="_blank" class="btn btn-directions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+          Get Directions
+        </a>
+        <a href="${t.mapPdf}" target="_blank" class="btn btn-map-pdf">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+          Trail Info
+        </a>
+        <a href="${info.website}" target="_blank" class="btn btn-website">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          ${info.name}
+        </a>
+      </div>
+
+      <div class="support-disclosure">
+        \u{1F331} This app was made to help simplify access to public and open lands in Midcoast Maine. Please visit the website linked above for further details about this property. We encourage you to support non-profits, especially land trusts, in their work to expand and maintain the types of properties you see here.
+      </div>
+    </div>
+  `;
+
+  panel.classList.add('open');
+  panel.scrollTop = 0;
+
+  // Mini map
+  setTimeout(() => {
+    if (detailMap) { detailMap.remove(); }
+    const container = document.getElementById('detail-map-container');
+    if (!container) return;
+
+    detailMap = L.map('detail-map-container', {
+      zoomControl: false, dragging: true, scrollWheelZoom: false
+    }).setView([t.lat, t.lng], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '', maxZoom: 18
+    }).addTo(detailMap);
+
+    // Parking pin
+    if (t.parkingLat) {
+      const pIcon = L.divIcon({
+        className: '',
+        html: '<div style="background:var(--brand-orange);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:Open Sans,sans-serif">P</div>',
+        iconSize: [28, 28], iconAnchor: [14, 14]
+      });
+      L.marker([t.parkingLat, t.parkingLng], { icon: pIcon }).addTo(detailMap).bindPopup('Parking');
+    }
+
+    // Trail center
+    L.marker([t.lat, t.lng], { icon: createTrailIcon(false) }).addTo(detailMap);
+
+    // Trailhead
+    if (t.trailheadLat) {
+      const thIcon = L.divIcon({
+        className: '',
+        html: '<div style="background:var(--brand-green);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);font-family:Open Sans,sans-serif">T</div>',
+        iconSize: [24, 24], iconAnchor: [12, 12]
+      });
+      L.marker([t.trailheadLat, t.trailheadLng], { icon: thIcon }).addTo(detailMap).bindPopup('Trailhead');
+    }
+
+    detailMap.invalidateSize();
+  }, 400);
+}
+
+function closeDetail() {
+  document.getElementById('detail-panel').classList.remove('open');
+  if (detailMap) { detailMap.remove(); detailMap = null; }
+}
+
+window.addEventListener('popstate', () => {
+  if (document.getElementById('detail-panel').classList.contains('open')) closeDetail();
+});
+</script>
+</body>
+</html>
