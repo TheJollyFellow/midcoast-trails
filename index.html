@@ -342,6 +342,25 @@
   .trail-tag.beach { background: #fff8e1; color: #f57f17; }
   .trail-tag.island { background: #e0f2f1; color: #00695c; }
 
+  /* Card badges row */
+  .card-badges {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;
+  }
+  .card-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 3px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+  }
+  .badge-free {
+    background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9;
+  }
+  .badge-dogs-yes { color: #2d7a2d; }
+  .badge-dogs-no { color: #b91c1c; }
+  .badge-dogs-seasonal { color: #e65100; }
+  .badge-accessible {
+    color: #1565c0;
+  }
+
   /* ===== STATUS BADGE ===== */
   .status-closed {
     display: inline-flex; align-items: center; gap: 4px;
@@ -603,6 +622,43 @@
   @media (min-width: 1024px) {
     .trail-cards-grid { grid-template-columns: repeat(3, 1fr); }
   }
+
+  /* ===== FOOTER ===== */
+  .site-footer {
+    background: var(--brand-green-dark);
+    color: rgba(255,255,255,0.75);
+    padding: 32px 20px;
+    margin-top: 24px;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .site-footer a {
+    color: rgba(255,255,255,0.9);
+    text-decoration: underline;
+    text-decoration-color: rgba(255,255,255,0.3);
+  }
+  .site-footer a:hover { text-decoration-color: rgba(255,255,255,0.7); }
+  .footer-inner { max-width: 700px; margin: 0 auto; }
+  .footer-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    margin: 16px 0 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .footer-heading:first-child { margin-top: 0; }
+  .footer-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    margin: 20px 0;
+  }
+  .footer-copyright {
+    text-align: center;
+    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    margin-top: 20px;
+  }
 </style>
 </head>
 <body>
@@ -729,7 +785,7 @@ const trails = [
   // ===== BTLT TRAILS =====
   {
     id: 'androscoggin-woods', name: 'Androscoggin Woods', town: 'Topsham', org: 'btlt',
-    miles: 1.0, acres: 53, dogs: true,
+    miles: 1.0, acres: 53, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'A wooded 53-acre property along the Androscoggin River offering peaceful walking trails with opportunities for birding and water access.',
     highlight: 'Androscoggin River frontage',
@@ -741,7 +797,7 @@ const trails = [
   },
   {
     id: 'bradley-pond', name: 'Bradley Pond Farm Preserve', town: 'Topsham', org: 'btlt',
-    miles: 4.0, acres: 163, dogs: true,
+    miles: 4.0, acres: 163, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Cross-country Skiing', 'Mountain Biking'],
     description: 'A 163-acre former farm with 4 miles of trails through forests, fields, and past a scenic pond. Popular for mountain biking and snowshoeing.',
     highlight: 'Scenic pond & diverse trails',
@@ -751,7 +807,7 @@ const trails = [
   },
   {
     id: 'cathance-river', name: 'Cathance River Nature Preserve', town: 'Topsham', org: 'btlt',
-    miles: 3.3, acres: 230, dogs: false,
+    miles: 3.3, acres: 230, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Snowshoeing'],
     description: 'A 230-acre preserve featuring a dramatic river gorge, ravines, and a wide variety of ecosystems. No dogs allowed to protect sensitive habitat.',
     highlight: 'Wild Cathance River gorge',
@@ -762,7 +818,7 @@ const trails = [
   },
   {
     id: 'chase-reserve', name: 'Chase Reserve at Skolfield Shores', town: 'Brunswick', org: 'btlt',
-    miles: 1.5, acres: 47, dogs: false,
+    miles: 1.5, acres: 47, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'A 47-acre coastal reserve with trails winding through upland forest to the shore of Middle Bay. Excellent birding opportunities.',
     highlight: 'Coastal woodland to Middle Bay',
@@ -772,7 +828,7 @@ const trails = [
   },
   {
     id: 'crystal-spring', name: 'Crystal Spring Farm', town: 'Brunswick', org: 'btlt',
-    miles: 2.5, acres: 155, dogs: true,
+    miles: 2.5, acres: 155, dogs: true, free: true, accessible: true,
     activities: ['Walking', 'Cross-country Skiing', 'Birding'],
     description: 'A 155-acre working farm with trails through fields and forest. Home to a community farm with weekly farmers market in season.',
     highlight: 'Working farm & community hub',
@@ -782,7 +838,7 @@ const trails = [
   },
   {
     id: 'head-of-tide', name: 'Head of Tide Preserve', town: 'Brunswick', org: 'btlt',
-    miles: 2.8, acres: 85, dogs: true,
+    miles: 2.8, acres: 85, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Kayak Launch'],
     description: 'An 85-acre preserve at the tidal head of the Androscoggin River featuring riverside trails, vernal pools, and a kayak launch point.',
     highlight: 'Tidal Androscoggin & kayak launch',
@@ -792,7 +848,7 @@ const trails = [
   },
   {
     id: 'hideaway-farm', name: 'Hideaway Farm', town: 'Brunswick', org: 'btlt',
-    miles: 1.8, acres: 75, dogs: true,
+    miles: 1.8, acres: 75, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Cross-country Skiing'],
     description: 'A 75-acre preserve featuring a peaceful loop trail through mixed forest with views of the surrounding countryside.',
     highlight: 'Peaceful woodland loop',
@@ -802,7 +858,7 @@ const trails = [
   },
   {
     id: 'maquoit-bay', name: 'Maquoit Bay Conservation Land', town: 'Brunswick', org: 'btlt',
-    miles: 1.6, acres: 95, dogs: true,
+    miles: 1.6, acres: 95, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Water Access'],
     description: 'A 95-acre property along Maquoit Bay featuring saltwater marsh, upland forest, and stunning bay views.',
     highlight: 'Saltwater marsh & bay views',
@@ -812,7 +868,7 @@ const trails = [
   },
   {
     id: 'muddy-river', name: 'Muddy River Municipal Reserve', town: 'Brunswick', org: 'btlt',
-    miles: 1.0, acres: 35, dogs: true,
+    miles: 1.0, acres: 35, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'A 35-acre reserve with a short loop trail along the Muddy River, great for quick walks and birding.',
     highlight: 'Quick riverside walk',
@@ -822,7 +878,7 @@ const trails = [
   },
   {
     id: 'neptune-woods', name: 'Neptune Woods', town: 'Brunswick', org: 'btlt',
-    miles: 1.5, acres: 42, dogs: true,
+    miles: 1.5, acres: 42, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Cross-country Skiing'],
     description: 'A 42-acre neighborhood preserve with trails through mixed forest, just minutes from downtown Brunswick.',
     highlight: 'Close-to-town forest escape',
@@ -832,7 +888,7 @@ const trails = [
   },
   {
     id: 'skolfield', name: 'Skolfield Preserve', town: 'Brunswick', org: 'btlt',
-    miles: 1.0, acres: 83, dogs: true,
+    miles: 1.0, acres: 83, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'An 83-acre preserve featuring a quiet trail through forest and along the banks of the New Meadows River.',
     highlight: 'New Meadows River banks',
@@ -841,7 +897,7 @@ const trails = [
   },
   {
     id: 'smart', name: 'Lois Milliken Smart Preserve', town: 'Topsham', org: 'btlt',
-    miles: 0.5, acres: 19, dogs: true,
+    miles: 0.5, acres: 19, dogs: true, free: true, accessible: false,
     activities: ['Walking'],
     description: 'A cozy 19-acre preserve with a short loop trail perfect for a quick nature walk in Topsham village.',
     highlight: 'Quick village loop',
@@ -851,7 +907,7 @@ const trails = [
   },
   {
     id: 'tarbox', name: 'Tarbox Preserve', town: 'Topsham', org: 'btlt',
-    miles: 0.8, acres: 32, dogs: true,
+    miles: 0.8, acres: 32, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'A 32-acre woodland preserve in the heart of Topsham with a loop trail through hemlock groves.',
     highlight: 'Hemlock grove walk',
@@ -861,7 +917,7 @@ const trails = [
   },
   {
     id: 'woodward-cove', name: 'Woodward Cove Preserve', town: 'Brunswick', org: 'btlt',
-    miles: 0.5, acres: 9, dogs: true,
+    miles: 0.5, acres: 9, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Water Access'],
     description: 'A tiny gem with a short trail to Woodward Cove, offering peaceful water access and views.',
     highlight: 'Quiet cove access',
@@ -870,7 +926,7 @@ const trails = [
   },
   {
     id: 'woodward-point', name: 'Woodward Point Preserve', town: 'Brunswick', org: 'btlt',
-    miles: 2.0, acres: 86, dogs: true,
+    miles: 2.0, acres: 86, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Water Access'],
     description: 'An 86-acre coastal preserve at the end of a peninsula with trails offering panoramic views of Maquoit Bay.',
     highlight: 'Maquoit Bay panorama',
@@ -882,7 +938,7 @@ const trails = [
   // ===== HHLT TRAILS =====
   {
     id: 'hhlt-cliff-trail', name: 'Cliff Trail', town: 'Harpswell', org: 'hhlt',
-    miles: 2.3, acres: null, dogs: true,
+    miles: 2.3, acres: null, dogs: true, free: true, accessible: true,
     activities: ['Walking', 'Scenic Views'],
     description: 'Stunning 150-foot cliffs overlooking Long Reach with a rugged shore walk along tidal Strawberry Creek. Includes 0.4-mile accessible section.',
     highlight: '150-foot coastal cliffs',
@@ -892,7 +948,7 @@ const trails = [
   },
   {
     id: 'hhlt-giants-stairs', name: "Giant's Stairs", town: 'Harpswell', org: 'hhlt',
-    miles: 0.5, acres: null, dogs: true,
+    miles: 0.5, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Scenic Views'],
     description: 'Iconic rocky coastline walk featuring dramatic natural stone "stairs" carved by the ocean over millennia.',
     highlight: 'Iconic rocky coastline walk',
@@ -902,7 +958,7 @@ const trails = [
   },
   {
     id: 'hhlt-curtis-farm', name: 'Curtis Farm Preserve', town: 'Harpswell', org: 'hhlt',
-    miles: 2.0, acres: 80, dogs: true,
+    miles: 2.0, acres: 80, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Cross-country Skiing'],
     description: 'An 80-acre historic farmland preserve with field and forest trails. Excellent views and diverse habitats.',
     highlight: 'Historic farm fields & forest',
@@ -912,7 +968,7 @@ const trails = [
   },
   {
     id: 'hhlt-long-reach', name: 'Long Reach Preserve', town: 'Harpswell', org: 'hhlt',
-    miles: 1.5, acres: null, dogs: true,
+    miles: 1.5, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'Trails through mixed forest with beautiful views along the tidal reach. Great for birding and quiet walks.',
     highlight: 'Tidal Long Reach views',
@@ -922,7 +978,7 @@ const trails = [
   },
   {
     id: 'hhlt-otter-brook', name: 'Otter Brook Preserve', town: 'Harpswell', org: 'hhlt',
-    miles: 1.0, acres: null, dogs: true,
+    miles: 1.0, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking'],
     description: 'Peaceful woodland trails along a stream corridor. A quiet escape with diverse forest habitats.',
     highlight: 'Stream corridor serenity',
@@ -932,7 +988,7 @@ const trails = [
   },
   {
     id: 'hhlt-little-ponds', name: 'Little Ponds Preserve', town: 'Harpswell', org: 'hhlt',
-    miles: 0.7, acres: null, dogs: true,
+    miles: 0.7, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'Quiet preserve with trails past small ponds and through mixed forest. Excellent for peaceful nature walks.',
     highlight: 'Quiet ponds & birding',
@@ -942,7 +998,7 @@ const trails = [
   },
   {
     id: 'hhlt-widgeon-cove', name: 'Widgeon Cove Trail', town: 'Harpswell', org: 'hhlt',
-    miles: 0.8, acres: null, dogs: true,
+    miles: 0.8, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking'],
     description: 'Short trail through forest to scenic Widgeon Cove with water views and peaceful surroundings.',
     highlight: 'Cove views through forest',
@@ -951,7 +1007,7 @@ const trails = [
   },
   {
     id: 'hhlt-skolfield-shores', name: 'Skolfield Shores Preserve', town: 'Harpswell', org: 'hhlt',
-    miles: 1.2, acres: null, dogs: true,
+    miles: 1.2, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Scenic Views'],
     description: 'Preserved shoreline with trails through spruce-fir forest and dramatic water views.',
     highlight: 'Spruce-fir coastal forest',
@@ -960,7 +1016,7 @@ const trails = [
   },
   {
     id: 'hhlt-tondreau', name: 'Tondreau Preserve', town: 'Harpswell', org: 'hhlt',
-    miles: 0.4, acres: null, dogs: true,
+    miles: 0.4, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking'],
     description: 'Small preserve offering a short woodland walk on the Harpswell Neck.',
     highlight: 'Quick woodland walk',
@@ -969,7 +1025,7 @@ const trails = [
   },
   {
     id: 'hhlt-potts-point', name: 'Potts Point Preserve', town: 'Harpswell', org: 'hhlt',
-    miles: 0.3, acres: null, dogs: true,
+    miles: 0.3, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Swimming', 'Beach'],
     description: 'Extensive tide pools to explore, a gravel beach, and dramatic views of Casco Bay.',
     highlight: 'Tide pools & Casco Bay views',
@@ -979,7 +1035,7 @@ const trails = [
   },
   {
     id: 'hhlt-devils-back', name: "Devil's Back Trail", town: 'Harpswell', org: 'hhlt',
-    miles: 3.5, acres: 36, dogs: true,
+    miles: 3.5, acres: 36, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Scenic Views'],
     description: "Two loop trails on Orr's Island through mixed forest and along Gun Point Cove. Seals, osprey, and seabirds frequently spotted.",
     highlight: "Rocky shoreline on Orr's Island",
@@ -988,7 +1044,7 @@ const trails = [
   },
   {
     id: 'hhlt-wilsons-cove', name: "Wilson's Cove Trail", town: 'Harpswell', org: 'hhlt',
-    miles: 0.6, acres: null, dogs: true,
+    miles: 0.6, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Scenic Views'],
     description: 'Short trail to a scenic cove on the Harpswell Neck offering coastal views and a quiet walk.',
     highlight: 'Scenic cove access',
@@ -997,7 +1053,7 @@ const trails = [
   },
   {
     id: 'hhlt-stovers-point', name: "Stover's Point Preserve", town: 'Harpswell', org: 'hhlt',
-    miles: 0.3, acres: null, dogs: true,
+    miles: 0.3, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Swimming', 'Water Access'],
     description: 'Shoreline preserve with rocky beach access, tide pools, and views of Casco Bay. Popular swimming spot in summer.',
     highlight: 'Rocky beach & swimming',
@@ -1006,7 +1062,7 @@ const trails = [
   },
   {
     id: 'hhlt-hackett-minot', name: 'Hackett & Minot Trails', town: 'Harpswell', org: 'hhlt',
-    miles: 1.0, acres: null, dogs: true,
+    miles: 1.0, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'Connected woodland trails through mixed forest on the Harpswell Neck. Peaceful birding and nature study.',
     highlight: 'Connected woodland trails',
@@ -1017,7 +1073,7 @@ const trails = [
   // ===== KELT TRAILS =====
   {
     id: 'kelt-thorne-head', name: 'Thorne Head Preserve', town: 'Bath', org: 'kelt',
-    miles: 1.5, acres: null, dogs: true,
+    miles: 1.5, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Mountain Biking', 'Scenic Views'],
     description: 'Popular near-town preserve with trails through mixed forest to the famous "Mushroom Cap" overlook with spectacular Kennebec estuary panoramas.',
     highlight: 'Kennebec estuary panoramic views',
@@ -1027,7 +1083,7 @@ const trails = [
   },
   {
     id: 'kelt-sewall-woods', name: 'Sewall Woods Preserve', town: 'Bath', org: 'kelt',
-    miles: 2.5, acres: 91, dogs: true,
+    miles: 2.5, acres: 91, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Mountain Biking'],
     description: 'A 117-acre sustainably managed forest with 2,300+ feet of Whiskeag Creek frontage. Rare brackish tidal marsh habitat with 10 species of listed rare plants.',
     highlight: 'Tidal marsh & rare plants',
@@ -1037,7 +1093,7 @@ const trails = [
   },
   {
     id: 'kelt-lilly-pond', name: 'Lilly Pond Community Forest', town: 'Bath', org: 'kelt',
-    miles: 3.0, acres: null, dogs: true,
+    miles: 3.0, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Mountain Biking'],
     description: 'Three miles of multi-use trails through mixed upland forests, rocky woodlands, and wetlands protecting 900 feet of Lilly Pond frontage.',
     highlight: 'Three-loop woodland trail system',
@@ -1047,7 +1103,7 @@ const trails = [
   },
   {
     id: 'kelt-whiskeag', name: 'Whiskeag Trail', town: 'Bath', org: 'kelt',
-    miles: 5.0, acres: null, dogs: true,
+    miles: 5.0, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Biking'],
     description: 'A 5-mile trail connecting the Bath YMCA with Thorne Head Preserve through varied terrain along the scenic Whiskeag Creek corridor.',
     highlight: '5-mile scenic corridor',
@@ -1057,7 +1113,7 @@ const trails = [
   },
   {
     id: 'kelt-red-rose', name: 'Red Rose Preserve', town: 'Bowdoinham', org: 'kelt',
-    miles: 1.0, acres: 62, dogs: true,
+    miles: 1.0, acres: 62, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: "KELT's first Bowdoinham preserve, a former dairy farm with rolling landscape through hayfields and quiet mixed forest with a perennial stream.",
     highlight: 'Rolling farmland & birding',
@@ -1066,7 +1122,7 @@ const trails = [
   },
   {
     id: 'kelt-center-point', name: 'Center Point Preserve', town: 'Bowdoinham', org: 'kelt',
-    miles: 1.0, acres: null, dogs: false,
+    miles: 1.0, acres: null, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Water Access'],
     description: 'Exemplary natural community protecting tidal waterfowl habitat with eight rare, threatened and endangered plant species. Spectacular Merrymeeting Bay views.',
     highlight: 'Merrymeeting Bay access',
@@ -1076,7 +1132,7 @@ const trails = [
   },
   {
     id: 'kelt-higgins-mtn', name: 'Higgins Mountain', town: 'Georgetown', org: 'kelt',
-    miles: 0.8, acres: null, dogs: false,
+    miles: 0.8, acres: null, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Scenic Views'],
     description: 'Short loop to one of the highest points on Georgetown Island (259 ft) with stunning coastal views from bedrock outcrops. Notable blueberry and huckleberry patches.',
     highlight: 'Summit views & wild blueberries',
@@ -1085,7 +1141,7 @@ const trails = [
   },
   {
     id: 'kelt-morse-pond', name: 'Morse Pond Preserve', town: 'Georgetown', org: 'kelt',
-    miles: 2.0, acres: 280, dogs: false,
+    miles: 2.0, acres: 280, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Cross-country Skiing'],
     description: '280-acre preserve connecting to Reid State Park as part of a 1,800-acre conserved block. Rolling landscape with excellent birding and wildlife.',
     highlight: 'Gateway to 1,800-acre wildlands',
@@ -1094,7 +1150,7 @@ const trails = [
   },
   {
     id: 'kelt-weber-kelly', name: 'Weber Kelly Preserve', town: 'Georgetown', org: 'kelt',
-    miles: 1.2, acres: null, dogs: true,
+    miles: 1.2, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Scenic Views'],
     description: 'Mixed woods, salt marsh, and a historic pegmatite quarry. Part of a nationally significant wildlife habitat with osprey nests and rare plant species.',
     highlight: 'Salt marsh & historic quarry',
@@ -1103,7 +1159,7 @@ const trails = [
   },
   {
     id: 'kelt-green-point', name: 'Green Point Preserve', town: 'West Bath', org: 'kelt',
-    miles: 1.5, acres: 45, dogs: true,
+    miles: 1.5, acres: 45, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Scenic Views'],
     description: '45-acre preserve on Winnegance Bay at Green Point with rocky outcrops and views down the New Meadows River. Features the historic Indian Carry Road.',
     highlight: 'New Meadows River overlooks',
@@ -1113,7 +1169,7 @@ const trails = [
   },
   {
     id: 'kelt-bonyun', name: 'Bonyun Preserve', town: 'Westport Island', org: 'kelt',
-    miles: 1.5, acres: 120, dogs: false,
+    miles: 1.5, acres: 120, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: "120-acre preserve featuring six natural habitat zones from tidal inlet to old-growth woods. Historic Heal's Mill site from 1830 along the Sasanoa River.",
     highlight: "Historic tidal mill & Sasanoa River",
@@ -1122,7 +1178,7 @@ const trails = [
   },
   {
     id: 'kelt-segerstrom', name: 'Segerstrom Preserve at Squam Creek', town: 'Westport Island', org: 'kelt',
-    miles: 1.5, acres: 159, dogs: true,
+    miles: 1.5, acres: 159, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Scenic Views'],
     description: '159-acre preserve with 3,300 feet of Squam Creek shoreline. Blazed trails through hardwood forest past historic cellar holes and spectacular tidal salt marsh views.',
     highlight: 'Squam Creek salt marsh views',
@@ -1131,7 +1187,7 @@ const trails = [
   },
   {
     id: 'kelt-merrymeeting', name: 'Merrymeeting Fields Preserve', town: 'Woolwich', org: 'kelt',
-    miles: 2.0, acres: 125, dogs: false,
+    miles: 2.0, acres: 125, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Cross-country Skiing'],
     description: '125-acre preserve with historic lighthouse overlook providing views of the Kennebec River and Merrymeeting Bay. Critical habitat with 7 bald eagle nests nearby.',
     highlight: 'Historic lighthouse & eagle habitat',
@@ -1142,7 +1198,7 @@ const trails = [
   // ===== TOWN / MUNICIPAL =====
   {
     id: 'town-commons', name: 'Brunswick Town Commons', town: 'Brunswick', org: 'town-brunswick',
-    miles: 5.0, acres: 71, dogs: true,
+    miles: 5.0, acres: 71, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Mountain Biking'],
     description: "Brunswick's oldest park (est. 1719) with 71 acres and numerous interconnected trails through diverse ecosystems including rare pitch pine barrens. Mostly flat, family-friendly terrain.",
     highlight: 'Historic park with pitch pine barrens',
@@ -1151,7 +1207,7 @@ const trails = [
   },
   {
     id: 'andro-bike-path', name: 'Androscoggin River Bike Path', town: 'Brunswick', org: 'town-brunswick',
-    miles: 2.6, acres: null, dogs: true,
+    miles: 2.6, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Biking'],
     description: 'Paved two-lane riverside path along the south bank of the Androscoggin River from Water Street. Stone benches, restrooms, and scenic river views throughout.',
     highlight: 'Paved riverside path',
@@ -1160,7 +1216,7 @@ const trails = [
   },
   {
     id: 'cox-pinnacle', name: 'Cox Pinnacle', town: 'Brunswick', org: 'town-brunswick',
-    miles: 2.5, acres: 103, dogs: true,
+    miles: 2.5, acres: 103, dogs: true, free: true, accessible: false,
     activities: ['Walking'],
     description: "103-acre park featuring Brunswick's highest point (350 ft elevation) with trails through forested hills and wetlands.",
     highlight: "Brunswick's highest point",
@@ -1169,7 +1225,7 @@ const trails = [
   },
   {
     id: 'coffin-pond', name: 'Coffin Pond Recreation Area', town: 'Brunswick', org: 'town-brunswick',
-    miles: 0.5, acres: null, dogs: true,
+    miles: 0.5, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Swimming', 'Playground', 'Beach'],
     description: 'Seasonal recreation area on a pond with swimming, playground, and short walking trails. Popular family destination.',
     highlight: 'Swimming & family fun',
@@ -1178,7 +1234,7 @@ const trails = [
   },
   {
     id: 'foreside-trails', name: 'Foreside Trails', town: 'Topsham', org: 'town-topsham',
-    miles: 2.4, acres: null, dogs: true,
+    miles: 2.4, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Biking', 'Cross-country Skiing'],
     description: 'Leisure paths along the Androscoggin River bordering athletic fields. Well-lit area with playgrounds, picnic areas, and winter activities.',
     highlight: 'Riverside paths & recreation',
@@ -1187,7 +1243,7 @@ const trails = [
   },
   {
     id: 'bath-waterfront', name: 'Waterfront Park', town: 'Bath', org: 'town-bath',
-    miles: 0.5, acres: null, dogs: true,
+    miles: 0.5, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Scenic Views', 'Picnicking'],
     description: 'Large park along the historic Kennebec River district with boat docks, farmers market (Sat May-Oct), and beautiful riverfront views.',
     highlight: 'Kennebec River waterfront',
@@ -1196,7 +1252,7 @@ const trails = [
   },
   {
     id: 'harpswell-mitchell', name: 'Mitchell Field', town: 'Harpswell', org: 'town-harpswell',
-    miles: 3.0, acres: 120, dogs: true,
+    miles: 3.0, acres: 120, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Biking', 'Swimming', 'Beach'],
     description: '120-acre former Navy fuel depot with miles of paved and gravel paths, woodland trails among old growth trees, sandy beach, and seasonal outdoor concerts.',
     highlight: 'Oceanside paths & sandy beach',
@@ -1206,7 +1262,7 @@ const trails = [
   },
   {
     id: 'harpswell-houghton', name: 'Houghton Graves Park', town: 'Harpswell', org: 'town-harpswell',
-    miles: 0.3, acres: null, dogs: true,
+    miles: 0.3, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Scenic Views', 'Picnicking'],
     description: "Small community park on Orr's Island with mowed paths leading to picnic tables and views of Beal's Cove on Harpswell Sound.",
     highlight: "Beal's Cove harbor views",
@@ -1217,7 +1273,7 @@ const trails = [
   // ===== STATE PARKS =====
   {
     id: 'popham-beach', name: 'Popham Beach State Park', town: 'Phippsburg', org: 'state',
-    miles: 2.5, acres: 605, dogs: 'seasonal',
+    miles: 2.5, acres: 605, dogs: 'seasonal', free: false, accessible: false,
     activities: ['Walking', 'Beach', 'Swimming', 'Birding'],
     description: 'One of Maine\'s most popular beaches with 605 acres of sand dunes, tidal pools, and spectacular views of the Kennebec River mouth. Dogs allowed Oct 1 - Mar 31 only.',
     highlight: 'Premier sandy beach & dunes',
@@ -1226,7 +1282,7 @@ const trails = [
   },
   {
     id: 'reid-state-park', name: 'Reid State Park', town: 'Georgetown', org: 'state',
-    miles: 3.5, acres: 770, dogs: 'seasonal',
+    miles: 3.5, acres: 770, dogs: 'seasonal', free: false, accessible: false,
     activities: ['Walking', 'Beach', 'Swimming', 'Scenic Views', 'Birding'],
     description: 'Georgetown\'s beloved 770-acre park with two sandy beaches (Mile Beach and Half Mile Beach), rocky headlands, salt marshes, and tidal lagoons. Dogs Oct 1 - Mar 31.',
     highlight: 'Sandy beaches & rocky headlands',
@@ -1235,7 +1291,7 @@ const trails = [
   },
   {
     id: 'wolfes-neck', name: "Wolfe's Neck Woods State Park", town: 'Freeport', org: 'state',
-    miles: 5.0, acres: 244, dogs: true,
+    miles: 5.0, acres: 244, dogs: true, free: false, accessible: false,
     activities: ['Walking', 'Birding', 'Scenic Views'],
     description: '244-acre park on a peninsula between the Harraseeket River and Casco Bay. White pine and hemlock forests, osprey nest views on Googins Island, and shoreline trails.',
     highlight: 'Osprey nests & Casco Bay shore',
@@ -1244,7 +1300,7 @@ const trails = [
   },
   {
     id: 'bradbury-mountain', name: 'Bradbury Mountain State Park', town: 'Pownal', org: 'state',
-    miles: 7.0, acres: 730, dogs: true,
+    miles: 7.0, acres: 730, dogs: true, free: false, accessible: false,
     activities: ['Walking', 'Hiking', 'Mountain Biking', 'Scenic Views', 'Camping'],
     description: '730-acre park with a summit trail offering panoramic views of Casco Bay. 21+ miles of multi-use trails, campground, and connections to Pineland Trails network.',
     highlight: 'Summit views & trail network',
@@ -1255,7 +1311,7 @@ const trails = [
   // ===== PHIPPSBURG =====
   {
     id: 'fort-popham', name: 'Fort Popham Historic Site', town: 'Phippsburg', org: 'state',
-    miles: 0.3, acres: null, dogs: true,
+    miles: 0.3, acres: null, dogs: true, free: false, accessible: false,
     activities: ['Walking', 'Historic Site', 'Scenic Views'],
     description: 'Unfinished Civil War-era granite fortification at the mouth of the Kennebec River. Panoramic ocean views and adjacent beach. Open seasonally.',
     highlight: 'Civil War fort & ocean views',
@@ -1264,7 +1320,7 @@ const trails = [
   },
   {
     id: 'bates-morse-mountain', name: 'Bates-Morse Mountain Conservation Area', town: 'Phippsburg', org: 'bates',
-    miles: 3.8, acres: 600, dogs: false,
+    miles: 3.8, acres: 600, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Hiking', 'Beach', 'Birding'],
     description: '600-acre undeveloped conservation area with a 2-mile walk to pristine Seawall Beach. Summit trail to Morse Mountain (180 ft) with coastal panoramas. No dogs, no bikes.',
     highlight: 'Pristine Seawall Beach & summit',
@@ -1273,7 +1329,7 @@ const trails = [
   },
   {
     id: 'plt-center-pond', name: 'Center Pond Preserve', town: 'Phippsburg', org: 'plt',
-    miles: 6.5, acres: 253, dogs: true,
+    miles: 6.5, acres: 253, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Hiking', 'Cross-country Skiing', 'Birding'],
     description: '253-acre preserve (also called Cooley Preserve) with 6.5 miles of trails through varied terrain, including pond shores, mixed forests, and wetlands.',
     highlight: 'Extensive trail network',
@@ -1282,7 +1338,7 @@ const trails = [
   },
   {
     id: 'plt-spirit-pond', name: 'Spirit Pond Preserve', town: 'Phippsburg', org: 'plt',
-    miles: 3.3, acres: null, dogs: true,
+    miles: 3.3, acres: null, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: 'Trails through mixed forest and along the shores of Spirit Pond, a tidal pond connected to the sea. Rich bird habitat and peaceful woodland walks.',
     highlight: 'Tidal pond & birding',
@@ -1291,7 +1347,7 @@ const trails = [
   },
   {
     id: 'plt-sprague-pond', name: 'Sprague Pond Preserve', town: 'Phippsburg', org: 'plt',
-    miles: 3.5, acres: 114, dogs: true,
+    miles: 3.5, acres: 114, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Cross-country Skiing'],
     description: '114-acre preserve with trails around a scenic freshwater pond. Mixed forest habitat with good birding and peaceful walks.',
     highlight: 'Freshwater pond trails',
@@ -1300,7 +1356,7 @@ const trails = [
   },
   {
     id: 'basin-preserve', name: 'Basin Preserve', town: 'Phippsburg', org: 'tnc',
-    miles: 5.8, acres: 1910, dogs: true,
+    miles: 5.8, acres: 1910, dogs: true, free: true, accessible: false,
     activities: ['Walking', 'Hiking', 'Birding', 'Water Access'],
     description: "The Nature Conservancy's massive 1,910-acre preserve featuring the Basin, a unique reversing tidal lagoon. Miles of trails through diverse habitats. Dogs on leash on some trails.",
     highlight: 'Reversing tidal lagoon',
@@ -1311,7 +1367,7 @@ const trails = [
   // ===== WEST BATH =====
   {
     id: 'hamilton-audubon', name: 'Hamilton Audubon Sanctuary', town: 'West Bath', org: 'audubon',
-    miles: 2.5, acres: 86, dogs: false,
+    miles: 2.5, acres: 86, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Birding'],
     description: '86-acre Maine Audubon sanctuary with trails through mature forest along the New Meadows River. No dogs allowed to protect sensitive bird habitat.',
     highlight: 'New Meadows River birding',
@@ -1322,7 +1378,7 @@ const trails = [
   // ===== BOWDOIN COLLEGE =====
   {
     id: 'schiller-center', name: 'Schiller Coastal Studies Center', town: 'Harpswell', org: 'bowdoin',
-    miles: 3.6, acres: 118, dogs: false,
+    miles: 3.6, acres: 118, dogs: false, free: true, accessible: false,
     activities: ['Walking', 'Birding', 'Scenic Views'],
     description: "Bowdoin College's 118-acre coastal studies center on Orr's Island with 3.6 miles of trails through spruce-fir forest and along the rocky shore. Open to public dawn to dusk.",
     highlight: "Orr's Island coastal trails",
@@ -1333,7 +1389,7 @@ const trails = [
   // ===== ISLANDS =====
   {
     id: 'eagle-island', name: 'Eagle Island', town: 'Harpswell', org: 'state',
-    miles: 0.5, acres: 17, dogs: true, island: true,
+    miles: 0.5, acres: 17, dogs: true, island: true, free: false, accessible: false,
     activities: ['Walking', 'Historic Site', 'Scenic Views', 'Island Access'],
     description: "Former home of Admiral Robert Peary, this 17-acre state historic site in Casco Bay is accessible by seasonal excursion boats from Harpswell. Trails, museum, and panoramic views.",
     highlight: "Peary's island & museum",
@@ -1342,7 +1398,7 @@ const trails = [
   },
   {
     id: 'jewell-island', name: 'Jewell Island', town: 'Portland (Casco Bay)', org: 'state',
-    miles: 3.3, acres: 221, dogs: true, island: true,
+    miles: 3.3, acres: 221, dogs: true, island: true, free: false, accessible: false,
     activities: ['Walking', 'Hiking', 'Camping', 'Scenic Views', 'Island Access'],
     description: '221-acre island in outer Casco Bay with WWII observation towers, campsites, and 3.3 miles of trails. Boat access only. Part of Maine Island Trail.',
     highlight: 'WWII towers & remote camping',
@@ -1351,7 +1407,7 @@ const trails = [
   },
   {
     id: 'whaleboat-island', name: 'Whaleboat Island', town: 'Harpswell', org: 'mcht',
-    miles: 1.0, acres: 122, dogs: false, island: true,
+    miles: 1.0, acres: 122, dogs: false, island: true, free: true, accessible: false,
     activities: ['Walking', 'Camping', 'Scenic Views', 'Island Access'],
     description: '122-acre MCHT island with primitive campsites, rocky shores, and interior trails. Boat access only. Part of Maine Island Trail.',
     highlight: 'Remote island camping',
@@ -1360,14 +1416,814 @@ const trails = [
   },
   {
     id: 'malaga-island', name: 'Malaga Island', town: 'Phippsburg', org: 'mcht',
-    miles: 1.4, acres: 42, dogs: false, island: true,
+    miles: 1.4, acres: 42, dogs: false, island: true, free: true, accessible: false,
     activities: ['Walking', 'Historic Site', 'Scenic Views', 'Island Access'],
     description: "42-acre island in the New Meadows River with a deeply important Maine history. MCHT preserve with trails and interpretive information. Boat access only.",
     highlight: 'Historic island & interpretation',
     lat: 43.7818, lng: -69.8751,
     mapPdf: 'https://www.mcht.org/'
   }
-];
+,
+    {
+      id: 'griggs-preserve',
+      name: 'Griggs Preserve',
+      town: 'Wiscasset',
+      lat: 44.003, lng: -69.671,
+      org: 'Midcoast Conservancy',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.9 miles',
+      time: '1 hour',
+      dogs: 'Yes',
+      activities: ['hiking','birding','xc-skiing'],
+      free: true,
+      accessible: false,
+      desc: 'A 56-acre preserve with trails winding through beautiful forestland to a scenic vista overlooking the Sheepscot River and the reversing falls at Sheepscot Village. Three interconnected trails offer a peaceful walk through mixed forest.',
+      url: 'https://www.midcoastconservancy.org/preserves-directory/griggs-preserve'
+    },
+    {
+      id: 'sunken-garden',
+      name: 'Sunken Garden',
+      town: 'Wiscasset',
+      lat: 44.0023, lng: -69.6655,
+      org: 'Town of Wiscasset',
+      orgType: 'town',
+      difficulty: 'Easy',
+      distance: '0.3 miles',
+      time: '20 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: true,
+      desc: 'A charming waterfront garden and walking area in the heart of Wiscasset village, with views over the Sheepscot River. The site of a former estate, the sunken garden features groomed paths and benches.',
+      url: 'https://www.wiscasset.org'
+    },
+    {
+      id: 'brlt-river-link',
+      name: 'River~Link Trail',
+      town: 'Edgecomb',
+      lat: 43.9762, lng: -69.6338,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '3.2 miles',
+      time: '1.5–2 hours',
+      dogs: 'Yes',
+      activities: ['hiking','birding','xc-skiing'],
+      free: true,
+      accessible: false,
+      desc: 'Miles of trail through stream valleys and wooded uplands, rich with wildlife and traces of historical land use. Connects multiple Boothbay Region Land Trust properties and offers a diverse woodland experience.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-ovens-mouth',
+      name: 'Ovens Mouth Preserve',
+      town: 'Boothbay',
+      lat: 43.905, lng: -69.642,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '5 miles',
+      time: '2–3 hours',
+      dogs: 'Yes',
+      activities: ['hiking','birding','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A 146-acre preserve with 5 miles of trails bordering the tidal Ovens Mouth waterway. East and west sections are connected by a 93-foot pedestrian bridge. Outstanding coastal scenery with rocky shores and mixed forest.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-porter',
+      name: 'Porter Preserve',
+      town: 'Boothbay',
+      lat: 43.8685, lng: -69.6715,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.2 miles',
+      time: '45 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A 19-acre preserve at the southern tip of Barter\'s Island between the Sheepscot and Back rivers. Well-marked trails wind through spruce, oak, and pine, with benches overlooking the water. A perfect short coastal walk.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-linekin',
+      name: 'Linekin Preserve',
+      town: 'Boothbay',
+      lat: 43.853, lng: -69.6195,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '2.5 miles',
+      time: '1.5 hours',
+      dogs: 'Yes',
+      activities: ['hiking','scenic','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A scenic peninsula preserve with trails through coastal forest and along the rocky shoreline of Linekin Bay. Features views of islands and the open ocean, with opportunities to spot seals and seabirds.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-ocean-point',
+      name: 'Ocean Point Preserve',
+      town: 'Boothbay',
+      lat: 43.828, lng: -69.585,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '0.8 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A short coastal trail at the scenic tip of the Boothbay peninsula, offering dramatic ocean views and rugged shoreline. A popular spot for watching the surf and spotting wildlife.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-gregory',
+      name: 'Gregory Hiking Trail',
+      town: 'Boothbay',
+      lat: 43.888, lng: -69.625,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '2.0 miles',
+      time: '1 hour',
+      dogs: 'Yes',
+      activities: ['hiking','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A well-maintained woodland trail with gentle hills through mixed forest. A good all-around hike connecting several BRLT properties in the central Boothbay area.',
+      url: 'https://www.mainetrailfinder.com/trails/trail/gregory-hiking-trail'
+    },
+    {
+      id: 'brlt-oak-point',
+      name: 'Oak Point Farm',
+      town: 'Boothbay Harbor',
+      lat: 43.8575, lng: -69.632,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.5 miles',
+      time: '45 min',
+      dogs: 'Yes',
+      activities: ['hiking','birding','scenic'],
+      free: true,
+      accessible: true,
+      desc: 'Home of the BRLT visitor center, this former saltwater farm features gentle trails through meadows and along the shore. Great for families, with educational programs and scenic picnic spots. Partially accessible paths.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-lobster-cove',
+      name: 'Lobster Cove Meadow',
+      town: 'Boothbay Harbor',
+      lat: 43.849, lng: -69.6255,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A peaceful meadow and woodland preserve near Boothbay Harbor village with gentle walking trails and excellent birdwatching opportunities. Connected to the Appalachee preserve.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-autumn-view',
+      name: 'Autumn View Preserve',
+      town: 'Boothbay Harbor',
+      lat: 43.8535, lng: -69.6285,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy to Moderate',
+      distance: '2.0 miles',
+      time: '1 hour',
+      dogs: 'Yes',
+      activities: ['hiking','birding','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'BRLT\'s newest preserve (2025), featuring approximately 68 acres in the heart of Boothbay Harbor with newly developed trails and parking. A significant addition to the region\'s trail network.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-hendricks-head',
+      name: 'Hendricks Head Preserve',
+      town: 'Southport',
+      lat: 43.816, lng: -69.657,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '0.6 miles',
+      time: '20 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A short coastal trail on Southport Island near the historic Hendricks Head Light, with views across the Sheepscot River to the open ocean. A lovely quick walk with lighthouse views.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'brlt-cross-river',
+      name: 'Cross River Preserve',
+      town: 'Boothbay',
+      lat: 43.902, lng: -69.618,
+      org: 'Boothbay Region Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A preserve along the Cross River estuary with trails through mixed forest and along the tidal waterway. Good for birdwatching and enjoying quiet coastal scenery.',
+      url: 'https://bbrlt.org'
+    },
+    {
+      id: 'cr-dodge-point',
+      name: 'Dodge Point Public Reserved Land',
+      town: 'Newcastle',
+      lat: 44.0085, lng: -69.5085,
+      org: 'Maine Bureau of Parks and Lands',
+      orgType: 'state',
+      difficulty: 'Easy to Moderate',
+      distance: '4.5 miles',
+      time: '2–3 hours',
+      dogs: 'Yes',
+      activities: ['hiking','swimming','birding','xc-skiing','snowshoeing'],
+      free: true,
+      accessible: false,
+      desc: 'Over 500 acres with 8,000 feet of Damariscotta River frontage. Four main trails wind through old farm roads and wooded paths to broad river vistas and gravelly sand beaches. A local favorite for swimming and hiking.',
+      url: 'https://www.coastalrivers.org/trails/dodge-point/'
+    },
+    {
+      id: 'cr-salt-bay',
+      name: 'Salt Bay Farm Heritage Center',
+      town: 'Damariscotta',
+      lat: 44.041, lng: -69.5185,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '2.0 miles',
+      time: '1 hour',
+      dogs: 'Yes',
+      activities: ['hiking','birding','scenic','xc-skiing'],
+      free: true,
+      accessible: true,
+      desc: 'Gentle trails wind through rolling hayfields alongside Great Salt Bay, with excellent birdwatching and sweeping views. The accessible Cohen River Trail connects to Whaleback Shell Midden State Historic Site via a wide, smooth path.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-round-top',
+      name: 'Round Top Farm',
+      town: 'Damariscotta',
+      lat: 44.0265, lng: -69.527,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.5 miles',
+      time: '45 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A former dairy farm with mown trails through open hayfields offering beautiful river and sunset views. A cherished community gathering place that hosts events and educational programs throughout the year.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-castner-brook',
+      name: 'Castner Brook Community Forest',
+      town: 'Damariscotta',
+      lat: 44.034, lng: -69.5115,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy to Moderate',
+      distance: '2.0 miles',
+      time: '1 hour',
+      dogs: 'Yes',
+      activities: ['hiking','mountain-biking'],
+      free: true,
+      accessible: true,
+      desc: 'A community forest featuring a flat, accessible trail through hemlock woods to a scenic brook, plus an intermediate mountain bike loop. Located right in the Damariscotta area, perfect for a quick outing.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-baker-forest',
+      name: 'Baker Forest',
+      town: 'Newcastle',
+      lat: 44.015, lng: -69.52,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '2.0 miles',
+      time: '1 hour',
+      dogs: 'Yes',
+      activities: ['hiking'],
+      free: true,
+      accessible: false,
+      desc: 'Mature forest stretching from River Road westward with rocky ridges and flat areas. A peaceful woodland walk through one of the region\'s older stands of mixed hardwood and softwood forest.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-marsh-river-bog',
+      name: 'Marsh River Bog',
+      town: 'Newcastle',
+      lat: 44.0485, lng: -69.534,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A gentle forested loop trail with views of a rare dwarf spruce bog. Located just off Route 1, this quick hike offers a unique glimpse into one of Maine\'s distinctive wetland ecosystems.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'whaleback-shell-midden',
+      name: 'Whaleback Shell Midden',
+      town: 'Damariscotta',
+      lat: 44.0385, lng: -69.5215,
+      org: 'Maine Bureau of Parks and Lands',
+      orgType: 'state',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '20 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: true,
+      desc: 'A state historic site preserving one of the largest oyster shell middens on the Atlantic coast, dating back over 2,000 years. Connected to Salt Bay Farm via the accessible Cohen River Trail along the Damariscotta River.',
+      url: 'https://www.maine.gov/dacf/parks'
+    },
+    {
+      id: 'cr-laverna',
+      name: 'La Verna Preserve',
+      town: 'Bristol',
+      lat: 43.891, lng: -69.4975,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '2.5 miles',
+      time: '1.5 hours',
+      dogs: 'Yes',
+      activities: ['hiking','scenic','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A stunning 120-acre preserve with 3,600 feet of shoreline, 2.5 miles of trails through mature forest, rocky coastline, and panoramic views of Muscongus Bay. One of the region\'s most scenic coastal hikes.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-crooked-farm',
+      name: 'Crooked Farm Preserve',
+      town: 'Bristol',
+      lat: 43.943, lng: -69.489,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '3.0 miles',
+      time: '1.5 hours',
+      dogs: 'Yes',
+      activities: ['hiking','fishing','hunting'],
+      free: true,
+      accessible: false,
+      desc: 'A 140-acre preserve of forest, wetlands, and fields with about a mile of Pemaquid River frontage. Three miles of trails wind through diverse habitats. Open for hiking, fishing, and hunting in season.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-bristol-rec',
+      name: 'Bristol Recreational Trail',
+      town: 'Bristol',
+      lat: 43.955, lng: -69.505,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking'],
+      free: true,
+      accessible: true,
+      desc: 'An easy loop trail along the Pemaquid River estuary with about 500 feet of river frontage. Starts near Bristol Consolidated School on Route 130. Includes a short accessible segment — a great family walk.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-bass-rock',
+      name: 'Bass Rock Preserve',
+      town: 'Bristol',
+      lat: 43.874, lng: -69.478,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '20 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A short trail leading to a rocky beach with beautiful views of Muscongus Bay toward the islands. Easy and rewarding — one of the best quick ocean views on the Pemaquid peninsula.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-plummer-point',
+      name: 'Plummer Point Preserve',
+      town: 'South Bristol',
+      lat: 43.8835, lng: -69.548,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy to Moderate',
+      distance: '1.5 miles',
+      time: '45 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A coastal spruce forest preserve with views over the Damariscotta River, Seal Cove, and offshore islands. A lovely peninsula walk through classic midcoast Maine landscape.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'rachel-carson-salt-pond',
+      name: 'Rachel Carson Salt Pond Preserve',
+      town: 'Bristol',
+      lat: 43.877, lng: -69.511,
+      org: 'The Nature Conservancy',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '0.25 miles',
+      time: '15 min',
+      dogs: 'No',
+      activities: ['hiking','scenic','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A quarter-acre tidal salt pond that inspired Rachel Carson\'s book "The Edge of the Sea." A small but significant preserve for exploring tide pool ecology at low tide. No dogs allowed to protect fragile habitat.',
+      url: 'https://www.nature.org/en-us/get-involved/how-to-help/places-we-protect/rachel-carson-salt-pond/'
+    },
+    {
+      id: 'pemaquid-point',
+      name: 'Pemaquid Point Lighthouse Park',
+      town: 'Bristol',
+      lat: 43.8373, lng: -69.5065,
+      org: 'Town of Bristol',
+      orgType: 'town',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '30 min',
+      dogs: 'Seasonal',
+      activities: ['hiking','scenic'],
+      free: false,
+      accessible: true,
+      desc: 'Home to one of Maine\'s most iconic lighthouses, perched atop dramatic striped rock formations. Walk the grounds, explore the Fishermen\'s Museum, and climb the lighthouse tower. Small admission fee in season.',
+      url: 'https://www.bristolmaine.org'
+    },
+    {
+      id: 'colonial-pemaquid',
+      name: 'Colonial Pemaquid State Historic Site',
+      town: 'Bristol',
+      lat: 43.868, lng: -69.5175,
+      org: 'Maine Bureau of Parks and Lands',
+      orgType: 'state',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: false,
+      accessible: true,
+      desc: 'Walk the grounds of one of Maine\'s earliest European settlements, featuring Fort William Henry (reconstructed), archaeological exhibits, and waterfront paths along Johns Bay. A fascinating blend of history and scenery.',
+      url: 'https://www.maine.gov/dacf/parks'
+    },
+    {
+      id: 'cr-pemaquid-pond',
+      name: 'Pemaquid Pond Preserve',
+      town: 'Bremen',
+      lat: 43.97, lng: -69.45,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A forested walk to the shore of Pemaquid Pond with lake views and a new loop trail added in 2025. A quiet preserve perfect for a peaceful walk in the woods.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'cr-osborn-finch',
+      name: 'Osborn Finch Wildlife Sanctuary',
+      town: 'Waldoboro',
+      lat: 44.0835, lng: -69.386,
+      org: 'Coastal Rivers Conservation Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '20 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A short, gentle trail leading to flat-rocked Medomak River overlooks — a wonderful picnic spot. Perfect for a quick nature break while passing through Waldoboro.',
+      url: 'https://www.coastalrivers.org/trails/'
+    },
+    {
+      id: 'mc-founders-quarry',
+      name: 'Founders & Quarry Hill Preserves',
+      town: 'Waldoboro',
+      lat: 44.105, lng: -69.378,
+      org: 'Midcoast Conservancy',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '3.5 miles',
+      time: '2 hours',
+      dogs: 'Yes',
+      activities: ['hiking','xc-skiing','snowshoeing'],
+      free: true,
+      accessible: false,
+      desc: 'Combined 400+ acres featuring some of the hilliest terrain in Lincoln County. The MVLT Founders Preserve (107 acres) connects to the Town of Waldoboro\'s 320-acre Quarry Hill, forming an extensive wildlife corridor.',
+      url: 'https://www.midcoastconservancy.org/medomak-valley'
+    },
+    {
+      id: 'mc-martin-point',
+      name: 'Martin Point Preserve',
+      town: 'Friendship',
+      lat: 43.971, lng: -69.331,
+      org: 'Midcoast Conservancy',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '20 min',
+      dogs: 'Yes',
+      activities: ['hiking','birding','xc-skiing'],
+      free: true,
+      accessible: false,
+      desc: 'A peaceful 6-acre waterfront preserve on Martin Point in Friendship. Walk among quiet beauty ideal for birding and nature observation, with cross-country skiing and snowshoeing in winter.',
+      url: 'https://www.midcoastconservancy.org/medomak-valley'
+    },
+    {
+      id: 'grlt-trolley-marsh',
+      name: 'Trolley Marsh Preserve',
+      town: 'Warren',
+      lat: 44.119, lng: -69.243,
+      org: 'Georges River Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy to Moderate',
+      distance: '2.0 miles',
+      time: '1 hour',
+      dogs: 'Yes',
+      activities: ['hiking','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A 113-acre preserve of open fields, young hardwood forests, mature pine, wetlands, and marshland along the Georges River. Named for the former trolley line that once ran through the area.',
+      url: 'https://www.georgesriver.org'
+    },
+    {
+      id: 'grlt-jack-baker',
+      name: 'Jack Baker Woods',
+      town: 'Thomaston',
+      lat: 44.082, lng: -69.1845,
+      org: 'Georges River Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','birding'],
+      free: true,
+      accessible: false,
+      desc: 'An 18-acre preserve of mixed softwoods with a 1-mile trail that crosses a 400-foot boardwalk through a high-function wetland. A quiet woodland oasis just off Beechwood Street in Thomaston.',
+      url: 'https://www.georgesriver.org/jack-baker-woods'
+    },
+    {
+      id: 'grlt-thomaston-forest',
+      name: 'Thomaston Town Forest',
+      town: 'Thomaston',
+      lat: 44.065, lng: -69.16,
+      org: 'Georges River Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '4.0 miles',
+      time: '2 hours',
+      dogs: 'Yes',
+      activities: ['hiking','mountain-biking'],
+      free: true,
+      accessible: false,
+      desc: 'Part of the Georges Highland Path with single-track hiking, multiple mountain biking loops, and access into the Rockland Bog. A continuous 10-mile experience connects to Route 90 in Rockport.',
+      url: 'https://www.georgesriver.org/thomaston-town-forest'
+    },
+    {
+      id: 'grlt-rockland-bog',
+      name: 'Rockland Bog',
+      town: 'Rockland',
+      lat: 44.089, lng: -69.138,
+      org: 'Georges River Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '7.0 miles',
+      time: '3–4 hours',
+      dogs: 'Yes',
+      activities: ['hiking','birding','xc-skiing'],
+      free: true,
+      accessible: false,
+      desc: 'A hidden gem — a 700-acre peat bog surrounded by 5,000 acres of woodlands with a 7-mile trail network. One of Maine\'s most unique natural areas, offering a true wilderness experience minutes from downtown Rockland.',
+      url: 'https://www.georgesriver.org/rockland-bog-trail'
+    },
+    {
+      id: 'rockland-harbor-trail',
+      name: 'Rockland Harbor Trail',
+      town: 'Rockland',
+      lat: 44.1035, lng: -69.1095,
+      org: 'City of Rockland',
+      orgType: 'town',
+      difficulty: 'Easy',
+      distance: '1.5 miles',
+      time: '45 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: true,
+      desc: 'A paved waterfront path along Rockland\'s working harbor, connecting the Rockland Breakwater to downtown. Watch lobster boats, visit galleries, and enjoy views of Penobscot Bay and the islands.',
+      url: 'https://www.rocklandmaine.gov'
+    },
+    {
+      id: 'rockland-breakwater',
+      name: 'Rockland Breakwater Lighthouse',
+      town: 'Rockland',
+      lat: 44.104, lng: -69.077,
+      org: 'City of Rockland',
+      orgType: 'town',
+      difficulty: 'Easy',
+      distance: '1.8 miles (round trip)',
+      time: '1 hour',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'Walk nearly a mile out into Penobscot Bay along a massive granite breakwater to the lighthouse at the end. Spectacular 360-degree views of the bay, islands, and Camden Hills. An iconic Maine experience.',
+      url: 'https://www.rocklandlighthouse.com'
+    },
+    {
+      id: 'grlt-pleasant-point',
+      name: 'Pleasant Point Nature Preserve',
+      town: 'Cushing',
+      lat: 43.983, lng: -69.242,
+      org: 'Georges River Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy to Moderate',
+      distance: '1.5 miles',
+      time: '45 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic','birding'],
+      free: true,
+      accessible: false,
+      desc: 'Near the mouth of the St. George River in Cushing, this preserve offers coastal trails with views of the river and Penobscot Bay. Part of GRLT\'s network protecting lands along the entire Georges River watershed.',
+      url: 'https://www.georgesriver.org/pleasant-point-nature-preserve'
+    },
+    {
+      id: 'langlais-art',
+      name: 'Langlais Art Preserve',
+      town: 'Cushing',
+      lat: 44.013, lng: -69.253,
+      org: 'Georges River Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '45 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: true,
+      desc: 'A unique preserve combining art and nature — the former home and studio of sculptor Bernard Langlais, featuring over 90 of his large-scale outdoor sculptures along trails through fields and forest. A must-visit cultural experience.',
+      url: 'https://www.georgesriver.org'
+    },
+    {
+      id: 'grlt-st-george-forest',
+      name: 'St. George Town Forest',
+      town: 'St. George',
+      lat: 44.018, lng: -69.17,
+      org: 'Georges River Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Moderate',
+      distance: '3.0 miles',
+      time: '1.5 hours',
+      dogs: 'Yes',
+      activities: ['hiking','mountain-biking'],
+      free: true,
+      accessible: false,
+      desc: 'A town forest with trailheads at Kinney Woods Road and Wiley\'s Corner, offering several miles of trails through mixed forest. Popular with both hikers and mountain bikers exploring the St. George peninsula.',
+      url: 'https://www.georgesriver.org/st-george-town-forest'
+    },
+    {
+      id: 'marshall-point',
+      name: 'Marshall Point Lighthouse',
+      town: 'St. George',
+      lat: 43.918, lng: -69.2615,
+      org: 'Town of St. George',
+      orgType: 'town',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '20 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: true,
+      desc: 'Famous from the movie "Forrest Gump," this historic lighthouse sits at the end of a scenic boardwalk. Features a small museum, rocky shore, and sweeping ocean views. A quintessential Maine coastal experience.',
+      url: 'https://marshallpoint.org'
+    },
+    {
+      id: 'owls-head-light',
+      name: 'Owls Head Light State Park',
+      town: 'Owls Head',
+      lat: 44.092, lng: -69.045,
+      org: 'Maine Bureau of Parks and Lands',
+      orgType: 'state',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '20 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A short walk to one of Maine\'s most picturesque lighthouses, perched on a dramatic headland above Penobscot Bay. Panoramic views of Rockland Harbor, the breakwater, and offshore islands.',
+      url: 'https://www.maine.gov/dacf/parks'
+    },
+    {
+      id: 'grlt-ash-point',
+      name: 'Ash Point Preserve',
+      town: 'Owls Head',
+      lat: 44.058, lng: -69.058,
+      org: 'Georges River Land Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A 34-acre preserve with spectacular views of Penobscot Bay and Ash Island. Originally protected in 1986, the property was donated to GRLT in 2017 to ensure permanent public access to these stunning coastal views.',
+      url: 'https://www.georgesriver.org/ash-point-preserve'
+    },
+    {
+      id: 'birch-point-beach',
+      name: 'Birch Point Beach State Park',
+      town: 'Owls Head',
+      lat: 44.068, lng: -69.068,
+      org: 'Maine Bureau of Parks and Lands',
+      orgType: 'state',
+      difficulty: 'Easy',
+      distance: '0.3 miles',
+      time: '15 min',
+      dogs: 'Seasonal',
+      activities: ['hiking','swimming','scenic'],
+      free: true,
+      accessible: false,
+      desc: 'A beautiful sand beach on Penobscot Bay, one of the few sandy beaches in the midcoast region. Popular for swimming in summer, with views to the islands. Dogs restricted June through September.',
+      url: 'https://www.maine.gov/dacf/parks'
+    },
+    {
+      id: 'mcht-weskeag-marsh',
+      name: 'Weskeag Marsh Preserve',
+      town: 'South Thomaston',
+      lat: 44.043, lng: -69.136,
+      org: 'Maine Coast Heritage Trust',
+      orgType: 'land-trust',
+      difficulty: 'Easy',
+      distance: '1.0 miles',
+      time: '30 min',
+      dogs: 'Yes',
+      activities: ['hiking','birding'],
+      free: true,
+      accessible: false,
+      desc: 'A 132-acre preserve featuring a mile-long grassy loop trail skirting fields and woodlands along one of the region\'s most ecologically-rich saltwater marshes. Outstanding birding, especially during migration.',
+      url: 'https://www.mcht.org'
+    },
+    {
+      id: 'mc-damariscotta-lake',
+      name: 'Damariscotta Lake State Park',
+      town: 'Nobleboro',
+      lat: 44.098, lng: -69.505,
+      org: 'Maine Bureau of Parks and Lands',
+      orgType: 'state',
+      difficulty: 'Easy',
+      distance: '0.5 miles',
+      time: '20 min',
+      dogs: 'Seasonal',
+      activities: ['hiking','swimming','scenic'],
+      free: false,
+      accessible: true,
+      desc: 'A popular state park on the shores of Damariscotta Lake with a sandy beach, picnic areas, and short walking trails. A great family destination for swimming in summer. Day-use fee applies.',
+      url: 'https://www.maine.gov/dacf/parks'
+    }
+  ];
 
 // ===== POPULATE TOWN DROPDOWN =====
 const towns = [...new Set(trails.map(t => t.town))].sort();
@@ -1755,6 +2611,10 @@ function renderList(trailList) {
                 <div class="lbl">Dogs</div>
               </div>
             </div>
+            <div class="card-badges">
+              ${t.free ? '<span class="card-badge badge-free">FREE</span>' : ''}
+              ${t.accessible ? '<span class="card-badge badge-accessible">\u{1F6BC} Stroller/Chair</span>' : ''}
+            </div>
             <div class="card-tags">
               ${t.activities.slice(0, 3).map(a =>
                 `<span class="trail-tag ${tagClass(a)}">${activityEmoji[a] || ''} ${a}</span>`
@@ -1765,6 +2625,24 @@ function renderList(trailList) {
         </div>
       `}).join('')}
     </div>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-heading">Disclaimer</div>
+        <p>Midcoast Trail Guide is an independent, community resource and is not affiliated with, endorsed by, or operated by any government agency, land trust, or conservation organization. Trail information is provided for general reference only and may not reflect current conditions.</p>
+
+        <div class="footer-heading">Use at Your Own Risk</div>
+        <p>Outdoor recreation involves inherent risks. Trail conditions, accessibility, and regulations can change without notice due to weather, seasonal closures, or land management decisions. Always verify conditions with the managing organization before heading out, and use your own judgment on the trail.</p>
+
+        <div class="footer-heading">Sources &amp; Attribution</div>
+        <p>Trail data is compiled from publicly available information published by local land trusts, conservation organizations, Maine state agencies, and municipal sources. We gratefully acknowledge the work of organizations like the Boothbay Region Land Trust, Brunswick Topsham Land Trust, Coastal Rivers Conservation Trust, Georges River Land Trust, Harpswell Heritage Land Trust, Maine Coast Heritage Trust, Midcoast Conservancy, Pemaquid Watershed Association, and many others who steward these lands for public enjoyment.</p>
+
+        <div class="footer-heading">Privacy</div>
+        <p>This site does not collect personal information, use cookies for tracking, or share data with third parties. Weather data is fetched from the Open-Meteo API. Map tiles are provided by OpenStreetMap contributors.</p>
+
+        <hr class="footer-divider">
+        <p class="footer-copyright">\u00A9 ${new Date().getFullYear()} Midcoast Trail Guide. Not an official source. Always verify trail conditions locally.</p>
+      </div>
+    </footer>
   `;
 }
 renderList(trails);
@@ -1864,6 +2742,11 @@ function openDetail(id) {
           <div class="value">${dogInfo.icon}</div>
           <div class="unit">${dogInfo.label}</div>
         </div>
+      </div>
+
+      <div class="card-badges" style="padding:0 0 8px;gap:8px">
+        ${t.free ? '<span class="card-badge badge-free" style="padding:5px 12px;font-size:13px">FREE</span>' : '<span class="card-badge" style="padding:5px 12px;font-size:13px;background:#fff3e0;color:#e65100;border:1px solid #ffe0b2">\uD83C\uDFAB Admission Fee</span>'}
+        ${t.accessible ? '<span class="card-badge badge-accessible" style="padding:5px 12px;font-size:13px">\uD83D\uDEBC Stroller/Chair Friendly</span>' : ''}
       </div>
 
       <div class="detail-section">
