@@ -716,7 +716,7 @@
   <div class="filter-divider"></div>
   <button class="filter-chip active" data-filter="all" onclick="setActivityFilter('all', this)">All</button>
   <button class="filter-chip" data-filter="dogs" onclick="setActivityFilter('dogs', this)">&#128054; Dog Friendly</button>
-  <button class="filter-chip" data-filter="long" onclick="setActivityFilter('long', this)">&#128694; 1+ Miles</button>
+  <button class="filter-chip" data-filter="big" onclick="setActivityFilter('big', this)">&#127795; 50+ Acres</button>
   <button class="filter-chip" data-filter="beach" onclick="setActivityFilter('beach', this)">&#127958; Beach</button>
   <button class="filter-chip" data-filter="island" onclick="setActivityFilter('island', this)">&#127965; Island</button>
   <button class="filter-chip" data-filter="water" onclick="setActivityFilter('water', this)">&#128758; Water Access</button>
@@ -1438,6 +1438,7 @@ const trails = [
       activities: ['hiking','birding','xc-skiing'],
       free: true,
       accessible: false,
+      acres: 56,
       desc: 'A 56-acre preserve with trails winding through beautiful forestland to a scenic vista overlooking the Sheepscot River and the reversing falls at Sheepscot Village. Three interconnected trails offer a peaceful walk through mixed forest.',
       url: 'https://www.midcoastconservancy.org/preserves-directory/griggs-preserve'
     },
@@ -1455,6 +1456,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: true,
+      acres: 2,
       desc: 'A charming waterfront garden and walking area in the heart of Wiscasset village, with views over the Sheepscot River. The site of a former estate, the sunken garden features groomed paths and benches.',
       url: 'https://www.wiscasset.org'
     },
@@ -1472,6 +1474,7 @@ const trails = [
       activities: ['hiking','birding','xc-skiing'],
       free: true,
       accessible: false,
+      acres: 230,
       desc: 'Miles of trail through stream valleys and wooded uplands, rich with wildlife and traces of historical land use. Connects multiple Boothbay Region Land Trust properties and offers a diverse woodland experience.',
       url: 'https://bbrlt.org'
     },
@@ -1489,6 +1492,7 @@ const trails = [
       activities: ['hiking','birding','scenic'],
       free: true,
       accessible: false,
+      acres: 146,
       desc: 'A 146-acre preserve with 5 miles of trails bordering the tidal Ovens Mouth waterway. East and west sections are connected by a 93-foot pedestrian bridge. Outstanding coastal scenery with rocky shores and mixed forest.',
       url: 'https://bbrlt.org'
     },
@@ -1506,6 +1510,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 19,
       desc: 'A 19-acre preserve at the southern tip of Barter\'s Island between the Sheepscot and Back rivers. Well-marked trails wind through spruce, oak, and pine, with benches overlooking the water. A perfect short coastal walk.',
       url: 'https://bbrlt.org'
     },
@@ -1523,6 +1528,7 @@ const trails = [
       activities: ['hiking','scenic','birding'],
       free: true,
       accessible: false,
+      acres: 95,
       desc: 'A scenic peninsula preserve with trails through coastal forest and along the rocky shoreline of Linekin Bay. Features views of islands and the open ocean, with opportunities to spot seals and seabirds.',
       url: 'https://bbrlt.org'
     },
@@ -1540,6 +1546,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 15,
       desc: 'A short coastal trail at the scenic tip of the Boothbay peninsula, offering dramatic ocean views and rugged shoreline. A popular spot for watching the surf and spotting wildlife.',
       url: 'https://bbrlt.org'
     },
@@ -1557,6 +1564,7 @@ const trails = [
       activities: ['hiking','birding'],
       free: true,
       accessible: false,
+      acres: 8,
       desc: 'A well-maintained woodland trail with gentle hills through mixed forest. A good all-around hike connecting several BRLT properties in the central Boothbay area.',
       url: 'https://www.mainetrailfinder.com/trails/trail/gregory-hiking-trail'
     },
@@ -1574,6 +1582,7 @@ const trails = [
       activities: ['hiking','birding','scenic'],
       free: true,
       accessible: true,
+      acres: 24,
       desc: 'Home of the BRLT visitor center, this former saltwater farm features gentle trails through meadows and along the shore. Great for families, with educational programs and scenic picnic spots. Partially accessible paths.',
       url: 'https://bbrlt.org'
     },
@@ -1591,6 +1600,7 @@ const trails = [
       activities: ['hiking','birding'],
       free: true,
       accessible: false,
+      acres: 14,
       desc: 'A peaceful meadow and woodland preserve near Boothbay Harbor village with gentle walking trails and excellent birdwatching opportunities. Connected to the Appalachee preserve.',
       url: 'https://bbrlt.org'
     },
@@ -1608,6 +1618,7 @@ const trails = [
       activities: ['hiking','birding','scenic'],
       free: true,
       accessible: false,
+      acres: 3,
       desc: 'BRLT\'s newest preserve (2025), featuring approximately 68 acres in the heart of Boothbay Harbor with newly developed trails and parking. A significant addition to the region\'s trail network.',
       url: 'https://bbrlt.org'
     },
@@ -1625,6 +1636,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 9,
       desc: 'A short coastal trail on Southport Island near the historic Hendricks Head Light, with views across the Sheepscot River to the open ocean. A lovely quick walk with lighthouse views.',
       url: 'https://bbrlt.org'
     },
@@ -1642,6 +1654,7 @@ const trails = [
       activities: ['hiking','birding'],
       free: true,
       accessible: false,
+      acres: 60,
       desc: 'A preserve along the Cross River estuary with trails through mixed forest and along the tidal waterway. Good for birdwatching and enjoying quiet coastal scenery.',
       url: 'https://bbrlt.org'
     },
@@ -1659,6 +1672,7 @@ const trails = [
       activities: ['hiking','swimming','birding','xc-skiing','snowshoeing'],
       free: true,
       accessible: false,
+      acres: 506,
       desc: 'Over 500 acres with 8,000 feet of Damariscotta River frontage. Four main trails wind through old farm roads and wooded paths to broad river vistas and gravelly sand beaches. A local favorite for swimming and hiking.',
       url: 'https://www.coastalrivers.org/trails/dodge-point/'
     },
@@ -1676,6 +1690,7 @@ const trails = [
       activities: ['hiking','birding','scenic','xc-skiing'],
       free: true,
       accessible: true,
+      acres: 105,
       desc: 'Gentle trails wind through rolling hayfields alongside Great Salt Bay, with excellent birdwatching and sweeping views. The accessible Cohen River Trail connects to Whaleback Shell Midden State Historic Site via a wide, smooth path.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1693,6 +1708,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 12,
       desc: 'A former dairy farm with mown trails through open hayfields offering beautiful river and sunset views. A cherished community gathering place that hosts events and educational programs throughout the year.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1710,6 +1726,7 @@ const trails = [
       activities: ['hiking','mountain-biking'],
       free: true,
       accessible: true,
+      acres: 108,
       desc: 'A community forest featuring a flat, accessible trail through hemlock woods to a scenic brook, plus an intermediate mountain bike loop. Located right in the Damariscotta area, perfect for a quick outing.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1727,6 +1744,7 @@ const trails = [
       activities: ['hiking'],
       free: true,
       accessible: false,
+      acres: 160,
       desc: 'Mature forest stretching from River Road westward with rocky ridges and flat areas. A peaceful woodland walk through one of the region\'s older stands of mixed hardwood and softwood forest.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1744,6 +1762,7 @@ const trails = [
       activities: ['hiking','birding'],
       free: true,
       accessible: false,
+      acres: 64,
       desc: 'A gentle forested loop trail with views of a rare dwarf spruce bog. Located just off Route 1, this quick hike offers a unique glimpse into one of Maine\'s distinctive wetland ecosystems.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1761,6 +1780,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: true,
+      acres: 4,
       desc: 'A state historic site preserving one of the largest oyster shell middens on the Atlantic coast, dating back over 2,000 years. Connected to Salt Bay Farm via the accessible Cohen River Trail along the Damariscotta River.',
       url: 'https://www.maine.gov/dacf/parks'
     },
@@ -1778,6 +1798,7 @@ const trails = [
       activities: ['hiking','scenic','birding'],
       free: true,
       accessible: false,
+      acres: 120,
       desc: 'A stunning 120-acre preserve with 3,600 feet of shoreline, 2.5 miles of trails through mature forest, rocky coastline, and panoramic views of Muscongus Bay. One of the region\'s most scenic coastal hikes.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1795,6 +1816,7 @@ const trails = [
       activities: ['hiking','fishing','hunting'],
       free: true,
       accessible: false,
+      acres: 140,
       desc: 'A 140-acre preserve of forest, wetlands, and fields with about a mile of Pemaquid River frontage. Three miles of trails wind through diverse habitats. Open for hiking, fishing, and hunting in season.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1812,6 +1834,7 @@ const trails = [
       activities: ['hiking'],
       free: true,
       accessible: true,
+      acres: 15,
       desc: 'An easy loop trail along the Pemaquid River estuary with about 500 feet of river frontage. Starts near Bristol Consolidated School on Route 130. Includes a short accessible segment — a great family walk.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1829,6 +1852,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 25,
       desc: 'A short trail leading to a rocky beach with beautiful views of Muscongus Bay toward the islands. Easy and rewarding — one of the best quick ocean views on the Pemaquid peninsula.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1846,6 +1870,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 18,
       desc: 'A coastal spruce forest preserve with views over the Damariscotta River, Seal Cove, and offshore islands. A lovely peninsula walk through classic midcoast Maine landscape.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1863,6 +1888,7 @@ const trails = [
       activities: ['hiking','scenic','birding'],
       free: true,
       accessible: false,
+      acres: 78,
       desc: 'A quarter-acre tidal salt pond that inspired Rachel Carson\'s book "The Edge of the Sea." A small but significant preserve for exploring tide pool ecology at low tide. No dogs allowed to protect fragile habitat.',
       url: 'https://www.nature.org/en-us/get-involved/how-to-help/places-we-protect/rachel-carson-salt-pond/'
     },
@@ -1880,6 +1906,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: false,
       accessible: true,
+      acres: 6,
       desc: 'Home to one of Maine\'s most iconic lighthouses, perched atop dramatic striped rock formations. Walk the grounds, explore the Fishermen\'s Museum, and climb the lighthouse tower. Small admission fee in season.',
       url: 'https://www.bristolmaine.org'
     },
@@ -1897,6 +1924,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: false,
       accessible: true,
+      acres: 18,
       desc: 'Walk the grounds of one of Maine\'s earliest European settlements, featuring Fort William Henry (reconstructed), archaeological exhibits, and waterfront paths along Johns Bay. A fascinating blend of history and scenery.',
       url: 'https://www.maine.gov/dacf/parks'
     },
@@ -1914,6 +1942,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 48,
       desc: 'A forested walk to the shore of Pemaquid Pond with lake views and a new loop trail added in 2025. A quiet preserve perfect for a peaceful walk in the woods.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1931,6 +1960,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 75,
       desc: 'A short, gentle trail leading to flat-rocked Medomak River overlooks — a wonderful picnic spot. Perfect for a quick nature break while passing through Waldoboro.',
       url: 'https://www.coastalrivers.org/trails/'
     },
@@ -1948,6 +1978,7 @@ const trails = [
       activities: ['hiking','xc-skiing','snowshoeing'],
       free: true,
       accessible: false,
+      acres: 40,
       desc: 'Combined 400+ acres featuring some of the hilliest terrain in Lincoln County. The MVLT Founders Preserve (107 acres) connects to the Town of Waldoboro\'s 320-acre Quarry Hill, forming an extensive wildlife corridor.',
       url: 'https://www.midcoastconservancy.org/medomak-valley'
     },
@@ -1965,6 +1996,7 @@ const trails = [
       activities: ['hiking','birding','xc-skiing'],
       free: true,
       accessible: false,
+      acres: 6,
       desc: 'A peaceful 6-acre waterfront preserve on Martin Point in Friendship. Walk among quiet beauty ideal for birding and nature observation, with cross-country skiing and snowshoeing in winter.',
       url: 'https://www.midcoastconservancy.org/medomak-valley'
     },
@@ -1982,6 +2014,7 @@ const trails = [
       activities: ['hiking','birding'],
       free: true,
       accessible: false,
+      acres: 113,
       desc: 'A 113-acre preserve of open fields, young hardwood forests, mature pine, wetlands, and marshland along the Georges River. Named for the former trolley line that once ran through the area.',
       url: 'https://www.georgesriver.org'
     },
@@ -1999,6 +2032,7 @@ const trails = [
       activities: ['hiking','birding'],
       free: true,
       accessible: false,
+      acres: 18,
       desc: 'An 18-acre preserve of mixed softwoods with a 1-mile trail that crosses a 400-foot boardwalk through a high-function wetland. A quiet woodland oasis just off Beechwood Street in Thomaston.',
       url: 'https://www.georgesriver.org/jack-baker-woods'
     },
@@ -2016,6 +2050,7 @@ const trails = [
       activities: ['hiking','mountain-biking'],
       free: true,
       accessible: false,
+      acres: 400,
       desc: 'Part of the Georges Highland Path with single-track hiking, multiple mountain biking loops, and access into the Rockland Bog. A continuous 10-mile experience connects to Route 90 in Rockport.',
       url: 'https://www.georgesriver.org/thomaston-town-forest'
     },
@@ -2033,6 +2068,7 @@ const trails = [
       activities: ['hiking','birding','xc-skiing'],
       free: true,
       accessible: false,
+      acres: 700,
       desc: 'A hidden gem — a 700-acre peat bog surrounded by 5,000 acres of woodlands with a 7-mile trail network. One of Maine\'s most unique natural areas, offering a true wilderness experience minutes from downtown Rockland.',
       url: 'https://www.georgesriver.org/rockland-bog-trail'
     },
@@ -2084,6 +2120,7 @@ const trails = [
       activities: ['hiking','scenic','birding'],
       free: true,
       accessible: false,
+      acres: 60,
       desc: 'Near the mouth of the St. George River in Cushing, this preserve offers coastal trails with views of the river and Penobscot Bay. Part of GRLT\'s network protecting lands along the entire Georges River watershed.',
       url: 'https://www.georgesriver.org/pleasant-point-nature-preserve'
     },
@@ -2101,6 +2138,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: true,
+      acres: 2,
       desc: 'A unique preserve combining art and nature — the former home and studio of sculptor Bernard Langlais, featuring over 90 of his large-scale outdoor sculptures along trails through fields and forest. A must-visit cultural experience.',
       url: 'https://www.georgesriver.org'
     },
@@ -2118,6 +2156,7 @@ const trails = [
       activities: ['hiking','mountain-biking'],
       free: true,
       accessible: false,
+      acres: 300,
       desc: 'A town forest with trailheads at Kinney Woods Road and Wiley\'s Corner, offering several miles of trails through mixed forest. Popular with both hikers and mountain bikers exploring the St. George peninsula.',
       url: 'https://www.georgesriver.org/st-george-town-forest'
     },
@@ -2135,6 +2174,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: true,
+      acres: 4,
       desc: 'Famous from the movie "Forrest Gump," this historic lighthouse sits at the end of a scenic boardwalk. Features a small museum, rocky shore, and sweeping ocean views. A quintessential Maine coastal experience.',
       url: 'https://marshallpoint.org'
     },
@@ -2152,6 +2192,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 5,
       desc: 'A short walk to one of Maine\'s most picturesque lighthouses, perched on a dramatic headland above Penobscot Bay. Panoramic views of Rockland Harbor, the breakwater, and offshore islands.',
       url: 'https://www.maine.gov/dacf/parks'
     },
@@ -2169,6 +2210,7 @@ const trails = [
       activities: ['hiking','scenic'],
       free: true,
       accessible: false,
+      acres: 34,
       desc: 'A 34-acre preserve with spectacular views of Penobscot Bay and Ash Island. Originally protected in 1986, the property was donated to GRLT in 2017 to ensure permanent public access to these stunning coastal views.',
       url: 'https://www.georgesriver.org/ash-point-preserve'
     },
@@ -2186,6 +2228,7 @@ const trails = [
       activities: ['hiking','swimming','scenic'],
       free: true,
       accessible: false,
+      acres: 12,
       desc: 'A beautiful sand beach on Penobscot Bay, one of the few sandy beaches in the midcoast region. Popular for swimming in summer, with views to the islands. Dogs restricted June through September.',
       url: 'https://www.maine.gov/dacf/parks'
     },
@@ -2203,6 +2246,7 @@ const trails = [
       activities: ['hiking','birding'],
       free: true,
       accessible: false,
+      acres: 132,
       desc: 'A 132-acre preserve featuring a mile-long grassy loop trail skirting fields and woodlands along one of the region\'s most ecologically-rich saltwater marshes. Outstanding birding, especially during migration.',
       url: 'https://www.mcht.org'
     },
@@ -2220,6 +2264,7 @@ const trails = [
       activities: ['hiking','swimming','scenic'],
       free: false,
       accessible: true,
+      acres: 2200,
       desc: 'A popular state park on the shores of Damariscotta Lake with a sandy beach, picnic areas, and short walking trails. A great family destination for swimming in summer. Day-use fee applies.',
       url: 'https://www.maine.gov/dacf/parks'
     }
@@ -2472,7 +2517,7 @@ function addMarkers(filteredTrails) {
 
     marker.bindPopup(`
       <div class="popup-title">${t.name}</div>
-      <div class="popup-meta">${t.town} \u2022 ${t.miles} mi${t.acres ? ' \u2022 ' + t.acres + ' acres' : ''}${islandTag}</div>
+      <div class="popup-meta">${t.town}${t.acres ? ' \u2022 ' + t.acres + ' acres' : ''}${islandTag}</div>
       ${statusHtml}
       <button class="popup-btn" onclick="openDetail('${t.id}')">Explore \u2192</button>
     `, { maxWidth: 260 });
@@ -2519,7 +2564,7 @@ function applyFilters() {
     let passActivity = true;
     switch (currentActivityFilter) {
       case 'dogs': passActivity = t.dogs === true; break;
-      case 'long': passActivity = t.miles >= 1.0; break;
+      case 'big': passActivity = (t.acres || 0) >= 50; break;
       case 'beach': passActivity = t.activities.includes('Beach'); break;
       case 'island': passActivity = !!t.island; break;
       case 'water': passActivity = t.activities.some(a => ['Water Access','Swimming','Kayak Launch','Fishing','Beach'].includes(a)); break;
@@ -2598,12 +2643,8 @@ function renderList(trailList) {
           </div>
           <div class="card-body">
             <div class="card-stats">
-              <div class="card-stat">
-                <div class="val">${t.miles}</div>
-                <div class="lbl">Miles</div>
-              </div>
               ${t.acres ? `<div class="card-stat">
-                <div class="val">${t.acres}</div>
+                <div class="val">${t.acres.toLocaleString()}</div>
                 <div class="lbl">Acres</div>
               </div>` : ''}
               <div class="card-stat">
@@ -2713,8 +2754,7 @@ function openDetail(id) {
       <div class="hero-meta">
         <span>${t.town}, Maine</span>
         <span>\u2022</span>
-        <span>${t.miles} mi</span>
-        ${t.acres ? `<span>\u2022</span><span>${t.acres} acres</span>` : ''}
+        ${t.acres ? `<span>${t.acres.toLocaleString()} acres</span>` : ''}
         ${t.island ? `<span>\u2022</span><span>\u{26F5} Island</span>` : ''}
       </div>
     </div>
@@ -2727,14 +2767,9 @@ function openDetail(id) {
       <div class="detail-map" id="detail-map-container"></div>
 
       <div class="detail-stats">
-        <div class="stat-box">
-          <div class="label">Distance</div>
-          <div class="value">${t.miles}</div>
-          <div class="unit">miles</div>
-        </div>
         ${t.acres ? `<div class="stat-box">
           <div class="label">Size</div>
-          <div class="value">${t.acres}</div>
+          <div class="value">${t.acres.toLocaleString()}</div>
           <div class="unit">acres</div>
         </div>` : ''}
         <div class="stat-box">
